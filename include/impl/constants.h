@@ -9,13 +9,13 @@ const float KSplitTankLeftMult = 1.0;
 const float KSplitTankRightMult = 1.0;
 
 // drive base
-const int KBackRightMotorPort = 0;
-const int KMiddleRightMotorPort = 1;
-const int KFrontRightMotorPort = 2;
+const int KBackRightMotorPort = 13;
+const int KMiddleRightMotorPort = 11;
+const int KFrontRightMotorPort = 12;
 
-const int KBackLeftMotorPort = 10; // rev
-const int KMiddleLeftMotorPort = 11; // rev
-const int KFrontLeftMotorPort = 12; // rev
+const int KBackLeftMotorPort = 18; // rev
+const int KMiddleLeftMotorPort = 20; // rev
+const int KFrontLeftMotorPort = 19; // rev
 
 // intake
 const int KIntakeMotorPort = 8;
