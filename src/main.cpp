@@ -25,20 +25,22 @@ using namespace vex;
 competition Competition;
 
 // define your global instances of motors and other devices here
-std::vector<vex::motor*> leftMotors{new vex::motor(KBackLeftMotorPort), new vex::motor(KMiddleLeftMotorPort), new vex::motor(KFrontLeftMotorPort)};
+std::vector<vex::motor*> leftMotors{new vex::motor(KBackLeftMotorPort, false), new vex::motor(KMiddleLeftMotorPort, false), new vex::motor(KFrontLeftMotorPort, false)};
 std::vector<vex::motor*> rightMotors{new vex::motor(KBackRightMotorPort, true), new vex::motor(KMiddleRightMotorPort, true), new vex::motor(KFrontRightMotorPort, true)};
 Base robotBase(leftMotors, rightMotors);
 PID turningPID(0.0, -0.25, 0.0, 0.0, 100, -100, 0.4);
 PID movementPID(0.0, 275, 0.0, 0.0, 100, -100, 0.1);
 Movement botMovement(&robotBase, true, true);
 Controller mainController(vex::controllerType::primary);
-vex::motor intakeMotor(KIntakeMotorPort);
+vex::motor intakeMotor(KIntakeMotorPort, true); // rev so it starts the correct dir
 Hang botHangPneumatics;
 vex::inertial* internalGyro = new vex::inertial(KInertialSensorPort);
 Gyro* botGyro = new Gyro(internalGyro);
 Odometry* botOdom = new Odometry(KOdomWheelSize, &robotBase, botGyro);
 OdomMovement* gamer = new OdomMovement(botOdom, &botMovement, botGyro, &movementPID, &turningPID);
 
+Toggleable intakeEnabled;
+Toggleable intakeReversed;
 
 /*---------------------------------------------------------------------------*/
 /*                          Pre-Autonomous Functions                         */
@@ -153,30 +155,28 @@ void autonomous(void) {
 void usercontrol(void) {
   // User control code here, inside the loop
   while (1) {
-    // This is the main execution loop for the user control program.
-    // Each time through the loop your program should update motor + servo
-    // values based on feedback from the joysticks.
+      // This is the main execution loop for the user control program.
+      // Each time through the loop your program should update motor + servo
+      // values based on feedback from the joysticks.
 
-    // ........................................................................
-    // Insert user code here. This is where you use the joystick values to
-    // update your motors, etc.
-    // ........................................................................
-    
+      // ........................................................................
+      // Insert user code here. This is where you use the joystick values to
+      // update your motors, etc.
+      // ........................................................................
+      
       botMovement.driveSplitArcade(&mainController);
-      botHangPneumatics.update(mainController.getButton(BUTTON_B));
+      //botHangPneumatics.update(mainController.getButton(BUTTON_B));
 
-      if (mainController.getButton(BUTTON_R1)) {
-        intakeMotor.spin(vex::forward, 100, vex::pct);
-      }
-      else if (mainController.getButton(BUTTON_R2)) {
-        intakeMotor.spin(vex::forward, -100, vex::pct);
+      if (intakeEnabled.isEnabled()) {
+        intakeMotor.spin(vex::forward, (intakeReversed.isEnabled() ? -100 : 100), vex::pct);
       }
       else {
         intakeMotor.spin(vex::forward, 0, vex::pct);
       }
 
-    wait(5, msec); // Sleep the task for a short amount of time to
-                    // prevent wasted resources.
+      intakeEnabled.update(mainController.getButton(BUTTON_R1));
+      intakeReversed.update(mainController.getButton(BUTTON_R2));
+      wait(5, msec); // Sleep the task for a short amount of time to prevent wasted resources.
   }
 }
 

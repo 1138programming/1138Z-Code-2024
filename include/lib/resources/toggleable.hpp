@@ -17,17 +17,21 @@ class Toggleable {
             this->enabled = !(this->enabled);
         }
 
-        // TODO: need????
-        // void update(bool updateVal) {
-        //     this->lastPressed = this->pressed;
-        //     this-> pressed = updateVal;
-        //     if (this->isPressed()) {
-        //         this->toggle();
-        //     }
-        // }
+        // TODO: need???? - yes???????? (what was past me cooking?)
+        void update(bool updateVal) {
+            this->lastPressed = this->pressed;
+            this->pressed = updateVal;
+            if (this->isPressed()) {
+                this->toggle();
+            }
+        }
 
         bool isPressed() {
             return (this->lastPressed == false && this->pressed == true);
+        }
+
+        bool isEnabled() {
+            return this->enabled;
         }
 };
 
