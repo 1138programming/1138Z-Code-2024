@@ -33,6 +33,7 @@ PID movementPID(0.0, 275, 0.0, 0.0, 100, -100, 0.1);
 Movement botMovement(&robotBase, true, true);
 Controller mainController(vex::controllerType::primary);
 vex::motor intakeMotor(KIntakeMotorPort, true); // rev so it starts the correct dir
+vex::motor intakeHoodMotor(KIntakeHoodMotorPort, false);
 Hang botHangPneumatics;
 vex::inertial* internalGyro = new vex::inertial(KInertialSensorPort);
 Gyro* botGyro = new Gyro(internalGyro);
@@ -168,10 +169,12 @@ void usercontrol(void) {
       //botHangPneumatics.update(mainController.getButton(BUTTON_B));
 
       if (intakeEnabled.isEnabled()) {
-        intakeMotor.spin(vex::forward, (intakeReversed.isEnabled() ? -100 : 100), vex::pct);
+        intakeMotor.spin(vex::forward, (intakeReversed.isEnabled() ? -100 : 100), vex::pct); // spin both correct dir
+        intakeHoodMotor.spin(vex::forward, (intakeReversed.isEnabled() ? -100 : 100), vex::pct);
       }
       else {
         intakeMotor.spin(vex::forward, 0, vex::pct);
+        intakeHoodMotor.spin(vex::forward, 0, vex::pct);
       }
 
       intakeEnabled.update(mainController.getButton(BUTTON_R1));

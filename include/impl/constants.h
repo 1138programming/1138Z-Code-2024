@@ -28,6 +28,7 @@ const bool KFrontLeftMotorRev = false;
 
 // intake
 const int KIntakeMotorPort = PORT1;
+const int KIntakeHoodMotorPort = PORT2;
 
 
 // odom
