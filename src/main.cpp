@@ -24,6 +24,8 @@ using namespace vex;
 // A global instance of competition
 competition Competition;
 
+vex::brain botBrain;
+
 // define your global instances of motors and other devices here
 std::vector<vex::motor*> leftMotors{new vex::motor(KBackLeftMotorPort, KBackLeftMotorRev), new vex::motor(KMiddleLeftMotorPort, KMiddleLeftMotorRev), new vex::motor(KFrontLeftMotorPort, KFrontLeftMotorRev)};
 std::vector<vex::motor*> rightMotors{new vex::motor(KBackRightMotorPort, KBackRightMotorRev), new vex::motor(KMiddleRightMotorPort, KMiddleRightMotorRev), new vex::motor(KFrontRightMotorPort, KFrontRightMotorRev)};
@@ -33,7 +35,7 @@ PID movementPID(0.0, 275, 0.0, 0.0, 100, -100, 0.1);
 Movement botMovement(&robotBase, true, true);
 Controller mainController(vex::controllerType::primary);
 vex::motor intakeMotor(KIntakeMotorPort, true); // rev so it starts the correct dir
-vex::motor intakeHoodMotor(KIntakeHoodMotorPort, false);
+vex::motor intakeHoodMotor(KIntakeHoodMotorPort, true);
 Hang botHangPneumatics;
 vex::inertial* internalGyro = new vex::inertial(KInertialSensorPort);
 Gyro* botGyro = new Gyro(internalGyro);
@@ -42,6 +44,9 @@ OdomMovement* gamer = new OdomMovement(botOdom, &botMovement, botGyro, &movement
 
 Toggleable intakeEnabled;
 Toggleable intakeReversed;
+
+Toggleable mogoMechToggle;
+vex::digital_out mogoMech(botBrain.ThreeWirePort.A);
 
 /*---------------------------------------------------------------------------*/
 /*                          Pre-Autonomous Functions                         */
@@ -177,8 +182,18 @@ void usercontrol(void) {
         intakeHoodMotor.spin(vex::forward, 0, vex::pct);
       }
 
+      mogoMech.set(mogoMechToggle.isEnabled());
+
       intakeEnabled.update(mainController.getButton(BUTTON_R1));
       intakeReversed.update(mainController.getButton(BUTTON_R2));
+
+      if(mogoMechToggle.isEnabled()) {
+        mogoMechToggle.update(mainController.getButton(BUTTON_L2));
+      }
+      else {
+        mogoMechToggle.update(mainController.getButton(BUTTON_L1));
+      }
+        
       wait(5, msec); // Sleep the task for a short amount of time to prevent wasted resources.
   }
 }
