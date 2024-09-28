@@ -3,10 +3,11 @@
 
 #include "../include/vex.h"
 #include "../include/lib/resources/toggleable.hpp"
+#include "constants.h"
 
 class Hang : public Toggleable {
     private:
-         vex::digital_out hangPiston = (new vex::brain())->ThreeWirePort.A;
+         vex::digital_out hangPiston = botBrain.ThreeWirePort.A;
     public:
         void update(bool val) {
             this->lastPressed = this->pressed;

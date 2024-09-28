@@ -34,4 +34,8 @@ const int KIntakeHoodMotorPort = vex::PORT2;
 // odom
 const int KInertialSensorPort = 5;
 const float KOdomWheelSize = 4.125;
+
+//brain
+static vex::brain botBrain;
+
 #endif

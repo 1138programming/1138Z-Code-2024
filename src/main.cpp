@@ -33,10 +33,12 @@ Base robotBase(leftMotors, rightMotors);
 PID turningPID(0.0, -0.25, 0.0, 0.0, 100, -100, 0.4);
 PID movementPID(0.0, 275, 0.0, 0.0, 100, -100, 0.1);
 Movement botMovement(&robotBase, true, true);
+
 Controller mainController(vex::controllerType::primary);
 vex::motor intakeMotor(KIntakeMotorPort, true); // rev so it starts the correct dir
 vex::motor intakeHoodMotor(KIntakeHoodMotorPort, true);
 Hang botHangPneumatics;
+
 vex::inertial* internalGyro = new vex::inertial(KInertialSensorPort);
 Gyro* botGyro = new Gyro(internalGyro);
 Odometry* botOdom = new Odometry(KOdomWheelSize, &robotBase, botGyro);
@@ -208,6 +210,17 @@ int main() {
 
   // Run the pre-autonomous function.
   pre_auton();
+
+  // free mem
+    for(int i = 0; i < leftMotors.size(); i++) {
+      delete leftMotors.at(i);
+    }
+    for (int i = 0; i < rightMotors.size(); i++) {
+      delete rightMotors.at(i);
+    }
+    delete botGyro;
+    delete botOdom;
+    delete gamer;
 
   // Prevent main from exiting with an infinite loop.
   while (true) {
