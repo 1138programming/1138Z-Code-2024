@@ -24,8 +24,6 @@ using namespace vex;
 // A global instance of competition
 competition Competition;
 
-vex::brain botBrain;
-
 // define your global instances of motors and other devices here
 std::vector<vex::motor*> leftMotors{new vex::motor(KBackLeftMotorPort, KBackLeftMotorRev), new vex::motor(KMiddleLeftMotorPort, KMiddleLeftMotorRev), new vex::motor(KFrontLeftMotorPort, KFrontLeftMotorRev)};
 std::vector<vex::motor*> rightMotors{new vex::motor(KBackRightMotorPort, KBackRightMotorRev), new vex::motor(KMiddleRightMotorPort, KMiddleRightMotorRev), new vex::motor(KFrontRightMotorPort, KFrontRightMotorRev)};
