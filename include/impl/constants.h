@@ -3,7 +3,7 @@
 
 // driving
 const float KSplitArcadeForwardMult = 1.0;
-const float KSplitArcadeTurningMult = 0.5;
+const float KSplitArcadeTurningMult = 0.75;
 
 const float KSplitTankLeftMult = 1.0;
 const float KSplitTankRightMult = 1.0;
@@ -29,11 +29,14 @@ const bool KFrontLeftMotorRev = false;
 // intake
 const int KIntakeMotorPort = vex::PORT1;
 const int KIntakeHoodMotorPort = vex::PORT2;
+const float KIntakeMotorSpeedMult = 1.0;
 
 
 // odom
-const int KInertialSensorPort = 5;
-const float KOdomWheelSize = 4.125;
+const int KInertialSensorPort = vex::PORT16;
+const float KOdomWheelSize = 2.75;
+const double kInchesFixMult = 0.000221; // TODO: FIX THISS!!!!!!
+//const float kInchesFixMult = 0.0221;
 
 //brain
 static vex::brain botBrain;

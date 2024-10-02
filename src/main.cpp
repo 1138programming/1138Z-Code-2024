@@ -29,7 +29,7 @@ std::vector<vex::motor*> leftMotors{new vex::motor(KBackLeftMotorPort, KBackLeft
 std::vector<vex::motor*> rightMotors{new vex::motor(KBackRightMotorPort, KBackRightMotorRev), new vex::motor(KMiddleRightMotorPort, KMiddleRightMotorRev), new vex::motor(KFrontRightMotorPort, KFrontRightMotorRev)};
 Base robotBase(leftMotors, rightMotors);
 PID turningPID(0.0, -0.25, 0.0, 0.0, 100, -100, 0.4);
-PID movementPID(0.0, 275, 0.0, 0.0, 100, -100, 0.1);
+PID movementPID(0.0, 1.0, 0.0, 0.0, 100, -100, 0.1);
 Movement botMovement(&robotBase, true, true);
 
 Controller mainController(vex::controllerType::primary);
@@ -59,7 +59,6 @@ vex::digital_out mogoMech(botBrain.ThreeWirePort.A);
 /*---------------------------------------------------------------------------*/
 
 void pre_auton(void) {
-
   // All activities that occur before the competition starts
   // Example: clearing encoders, setting servo positions, ...
 }
@@ -75,77 +74,78 @@ void pre_auton(void) {
 /*---------------------------------------------------------------------------*/
 
 void autonomous(void) {
-  uint32_t setTime;
+  //uint32_t setTime;
 
   robotBase.resetAllEncoders();
-  botGyro->resetGyro();
+  botGyro->resetGyroWithWait();
 
   //this code sucks kys - bronson
 
   // move forward + intake
-  intakeMotor.spin(vex::forward, -100, vex::pct);
-  gamer->fixed(18.0);
+  //intakeMotor.spin(vex::forward, -100, vex::pct);
+  gamer->fixed(2.0);
+  //gamer->turnToPosPID(240.0, 8.0);
 
-  // spin intake for 500ms
-  setTime = vex::timer::system() + 500;
-  while (vex::timer::system() <= setTime) {
-    vex::wait(5, vex::msec);
-  }
-  intakeMotor.spin(vex::forward, 0, vex::pct);
+  // // spin intake for 500ms
+  // setTime = vex::timer::system() + 500;
+  // while (vex::timer::system() <= setTime) {
+  //   vex::wait(5, vex::msec);
+  // }
+  // intakeMotor.spin(vex::forward, 0, vex::pct);
 
-  while(!botGyro->isResetFinished()) {
-    // do nothing
-    vex::wait(5, vex::msec);
-  }
+  // while(!botGyro->isResetFinished()) {
+  //   // do nothing
+  //   vex::wait(5, vex::msec);
+  // }
 
-  //move back, spin, then move more forward (don't get hit on thing)
-  gamer->fixed(-10.0);
-      // force turn left
-      // setTime = vex::timer::system() + 60;
-      // while (vex::timer::system() < setTime) {
-      //   botMovement.turn(100);
-      // }
-  gamer->turnToPosPID(180.0, 8.0);
-  gamer->fixed(18.0);
+  // //move back, spin, then move more forward (don't get hit on thing)
+  // gamer->fixed(-10.0);
+  //     // force turn left
+  //     // setTime = vex::timer::system() + 60;
+  //     // while (vex::timer::system() < setTime) {
+  //     //   botMovement.turn(100);
+  //     // }
+  // gamer->turnToPosPID(180.0, 8.0);
+  // gamer->fixed(18.0);
 
-  // turn and go forward into goal (multiple steps)
-    gamer->turnToPosPID(140.0, 8.0);
-    gamer->fixed(26.0);
-    gamer->turnToPosPID(90, 8.0);
-    // spin outtake before we go into goal... (and go in)
-      intakeMotor.spin(vex::forward, 100, vex::pct);
-      setTime = vex::timer::system() + 200;
-      while (vex::timer::system() < setTime) {
-        vex::wait(5, vex::msec);
-      }
-      gamer->fixed(12.0);
-    // leave goal and turn to triballs
-    gamer->fixed(-22.0);
-    intakeMotor.spin(vex::forward, -100, vex::pct);
-    gamer->turnToPosPID(33.0, 8.0);
-    gamer->fixed(46.0);
-    intakeMotor.spin(vex::forward, 0, vex::pct);
-    // turn back to goal and outtake
-    gamer->turnToPosPID(160.0, 8.0);
-    intakeMotor.spin(vex::forward, 100, vex::pct);
-    gamer->fixed(30.0);
-    // turn to goal
-    // sex
-      gamer->fixed(30.0);
-      intakeMotor.spin(vex::forward, 0, vex::pct);
-      while(true) {
-        gamer->fixed(-10.0);
-        vex::wait(50, vex::msec);
-        gamer->fixed(10.0);
-        vex::wait(50, vex::msec);
-      }
+  // // turn and go forward into goal (multiple steps)
+  //   gamer->turnToPosPID(140.0, 8.0);
+  //   gamer->fixed(26.0);
+  //   gamer->turnToPosPID(90, 8.0);
+  //   // spin outtake before we go into goal... (and go in)
+  //     intakeMotor.spin(vex::forward, 100, vex::pct);
+  //     setTime = vex::timer::system() + 200;
+  //     while (vex::timer::system() < setTime) {
+  //       vex::wait(5, vex::msec);
+  //     }
+  //     gamer->fixed(12.0);
+  //   // leave goal and turn to triballs
+  //   gamer->fixed(-22.0);
+  //   intakeMotor.spin(vex::forward, -100, vex::pct);
+  //   gamer->turnToPosPID(33.0, 8.0);
+  //   gamer->fixed(46.0);
+  //   intakeMotor.spin(vex::forward, 0, vex::pct);
+  //   // turn back to goal and outtake
+  //   gamer->turnToPosPID(160.0, 8.0);
+  //   intakeMotor.spin(vex::forward, 100, vex::pct);
+  //   gamer->fixed(30.0);
+  //   // turn to goal
+  //   // sex
+  //     gamer->fixed(30.0);
+  //     intakeMotor.spin(vex::forward, 0, vex::pct);
+  //     while(true) {
+  //       gamer->fixed(-10.0);
+  //       vex::wait(50, vex::msec);
+  //       gamer->fixed(10.0);
+  //       vex::wait(50, vex::msec);
+  //     }
 
 
-  // gamer->turnToPosPID(90.0, 0.1);
+  // // gamer->turnToPosPID(90.0, 0.1);
 
-  // ..........................................................................
-  // Insert autonomous user code here.
-  // ..........................................................................
+  // // ..........................................................................
+  // // Insert autonomous user code here.
+  // // ..........................................................................
 }
 
 /*---------------------------------------------------------------------------*/
@@ -174,8 +174,8 @@ void usercontrol(void) {
       //botHangPneumatics.update(mainController.getButton(BUTTON_B));
 
       if (intakeEnabled.isEnabled()) {
-        intakeMotor.spin(vex::forward, (intakeReversed.isEnabled() ? -100 : 100), vex::pct); // spin both correct dir
-        intakeHoodMotor.spin(vex::forward, (intakeReversed.isEnabled() ? -100 : 100), vex::pct);
+        intakeMotor.spin(vex::forward, (intakeReversed.isEnabled() ? -(KIntakeMotorSpeedMult * 100) : (KIntakeMotorSpeedMult * 100)), vex::pct); // spin both correct dir
+        intakeHoodMotor.spin(vex::forward, (intakeReversed.isEnabled() ? -(KIntakeMotorSpeedMult * 100) : (KIntakeMotorSpeedMult * 100)), vex::pct);
       }
       else {
         intakeMotor.spin(vex::forward, 0, vex::pct);
@@ -210,15 +210,15 @@ int main() {
   pre_auton();
 
   // free mem
-    for(int i = 0; i < leftMotors.size(); i++) {
-      delete leftMotors.at(i);
-    }
-    for (int i = 0; i < rightMotors.size(); i++) {
-      delete rightMotors.at(i);
-    }
-    delete botGyro;
-    delete botOdom;
-    delete gamer;
+    // for(int i = 0; i < leftMotors.size(); i++) {
+    //   delete leftMotors.at(i);
+    // }
+    // for (int i = 0; i < rightMotors.size(); i++) {
+    //   delete rightMotors.at(i);
+    // }
+    //delete botGyro;
+    // delete botOdom;
+    // delete gamer;
 
   // Prevent main from exiting with an infinite loop.
   while (true) {

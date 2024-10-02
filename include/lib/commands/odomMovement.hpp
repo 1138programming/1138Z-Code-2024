@@ -102,7 +102,7 @@ class OdomMovement {
             while (this->odomMovementPID->isPidFinished() == false);
         }
         void fixed(double inches) {
-            inches *= 0.0221;
+            inches *= kInchesFixMult;
             bool negative = false;
             if (inches < 0) {
                 negative = true;

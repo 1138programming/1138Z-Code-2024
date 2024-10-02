@@ -42,10 +42,10 @@ class Gyro {
         */
         double getHeading() {
             if (!this->gyro->isCalibrating()) {
-                return this->gyro->heading();
+               return this->gyro->heading();
             }
             else {
-                return 0.0;
+               return 0.0;
             }
         }
 };
