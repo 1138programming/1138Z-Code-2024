@@ -35,7 +35,7 @@ const float KIntakeMotorSpeedMult = 1.0;
 // odom
 const int KInertialSensorPort = vex::PORT16;
 const float KOdomWheelSize = 2.75;
-const double kInchesFixMult = 0.000221; // TODO: FIX THISS!!!!!!
+const double kInchesFixMult = 0.018420820508516; // TODO: FIX THISS!!!!!!
 //const float kInchesFixMult = 0.0221;
 
 //brain

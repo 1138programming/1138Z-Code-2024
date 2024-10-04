@@ -55,10 +55,11 @@ class OdomMovement {
             while(this->odomTurningPID->isPidFinished() == false) {
                 cont.Screen.clearLine(0);
                 cont.Screen.setCursor(0,0);
-                cont.Screen.print("%f, %f", getDistBetweenDeg(this->gyro->getHeading(), targetPos), this->gyro->getHeading());
 
                 this->odom->pollAndUpdateOdom();
                 double PIDVal = this->odomTurningPID->calculate(getDistBetweenDeg(this->gyro->getHeading(), targetPos));
+                
+                cont.Screen.print("%f, %f", PIDVal,/*getDistBetweenDeg(this->gyro->getHeading(), targetPos),*/ this->gyro->getHeading());
                 this->robotMovement->turn(PIDVal);
                 // wait for bot to move
                 vex::wait(5, vex::msec);
@@ -103,13 +104,14 @@ class OdomMovement {
         }
         void fixed(double inches) {
             inches *= kInchesFixMult;
+
             bool negative = false;
             if (inches < 0) {
                 negative = true;
             }
             // get vector2s
             this->odom->pollAndUpdateOdom();
-            Vector2 initialPos = (Vector2) {this->odom->getX(), this->odom->getY()};
+            Vector2 initialPos = this->odom->getPos();
             // set up PID
             this->odomMovementPID->setSetpoint(0.0);
             this->odomMovementPID->setAllowedError(0.02);
@@ -121,13 +123,15 @@ class OdomMovement {
                 cont.Screen.clearLine(0);
                 vex::wait(5, vex::msec);
                 cont.Screen.setCursor(0,0);
-                cont.Screen.print("%f, %f", this->odom->getX(), this->odom->getY());
 
                 this->odom->pollAndUpdateOdom();
 
                 Vector2 currentPos = this->odom->getPos();
                 
                 double dif = this->odom->pythagoreanThrmBetweenTwoPoints(initialPos, currentPos);
+                //cont.Screen.print("%f, %f", this->odom->getX(), this->odom->getY());
+                cont.Screen.print("%lf", dif);
+
                 double movement;
                 if (negative) {
                     movement = this->odomMovementPID->calculate(inches + dif);
@@ -138,8 +142,6 @@ class OdomMovement {
                 this->robotMovement->robotBase->driveBothSides(movement);
 
             } while(this->odomMovementPID->isPidFinished() == false);
-
-
         }
 };
 

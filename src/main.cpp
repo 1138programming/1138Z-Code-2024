@@ -28,8 +28,8 @@ competition Competition;
 std::vector<vex::motor*> leftMotors{new vex::motor(KBackLeftMotorPort, KBackLeftMotorRev), new vex::motor(KMiddleLeftMotorPort, KMiddleLeftMotorRev), new vex::motor(KFrontLeftMotorPort, KFrontLeftMotorRev)};
 std::vector<vex::motor*> rightMotors{new vex::motor(KBackRightMotorPort, KBackRightMotorRev), new vex::motor(KMiddleRightMotorPort, KMiddleRightMotorRev), new vex::motor(KFrontRightMotorPort, KFrontRightMotorRev)};
 Base robotBase(leftMotors, rightMotors);
-PID turningPID(0.0, -0.25, 0.0, 0.0, 100, -100, 0.4);
-PID movementPID(0.0, 1.0, 0.0, 0.0, 100, -100, 0.1);
+PID turningPID(0.0, -0.4, 0.0, 0.0, 100, -100, 0.4);
+PID movementPID(0.0, 200.0, 0.0, 0.0, 100, -100, 0.1);
 Movement botMovement(&robotBase, true, true);
 
 Controller mainController(vex::controllerType::primary);
@@ -83,7 +83,9 @@ void autonomous(void) {
 
   // move forward + intake
   //intakeMotor.spin(vex::forward, -100, vex::pct);
-  gamer->fixed(2.0);
+  //gamer->turnToPosPID(180.0, 4.0);
+  gamer->fixed(-60.0);
+  mogoMech.set(true);
   //gamer->turnToPosPID(240.0, 8.0);
 
   // // spin intake for 500ms
