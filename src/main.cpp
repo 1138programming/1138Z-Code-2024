@@ -61,6 +61,8 @@ vex::digital_out mogoMech(botBrain.ThreeWirePort.A);
 void pre_auton(void) {
   // All activities that occur before the competition starts
   // Example: clearing encoders, setting servo positions, ...
+  robotBase.resetAllEncoders();
+  botGyro->resetGyroWithWait();
 }
 
 /*---------------------------------------------------------------------------*/
@@ -74,18 +76,50 @@ void pre_auton(void) {
 /*---------------------------------------------------------------------------*/
 
 void autonomous(void) {
-  //uint32_t setTime;
-
-  robotBase.resetAllEncoders();
-  botGyro->resetGyroWithWait();
-
+  uint32_t setTime;
   //this code sucks kys - bronson
 
   // move forward + intake
   //intakeMotor.spin(vex::forward, -100, vex::pct);
   //gamer->turnToPosPID(180.0, 4.0);
-  gamer->fixed(-60.0);
+
+  // pick up MOGO & turn to ring
   mogoMech.set(true);
+  gamer->fixed(-28.806);
+  mogoMech.set(false);
+  intakeMotor.spin(vex::forward, 100, vex::pct);
+  gamer->turnToPosPID(67.3787, 6.0); // thank the lord for trig
+
+  // (hopefully) intake ring onto mogo
+  gamer->fixed(14.1041);
+  intakeMotor.spin(vex::forward, 0, vex::pct);
+  gamer->fixed(-6.0);
+  intakeMotor.spin(vex::forward, 100, vex::pct);
+  intakeHoodMotor.spin(vex::forward, 100, vex::pct);
+  gamer->fixed(8.0);
+
+  setTime = vex::timer::system() + 500; // wait so bot hopefully scores
+  while (vex::timer::system() <= setTime) {vex::wait(5, vex::msec);} // wait loop
+
+  // let go of mogo 
+  mogoMech.set(true);
+  gamer->fixed(-8.0); //move it out of the way
+  gamer->fixed(8.0);
+  // if we haven't scored it's a lost cause
+  intakeMotor.spin(vex::forward, 0, vex::pct);
+  intakeHoodMotor.spin(vex::forward, 0, vex::pct);
+
+  // turn & move to second mogo
+  gamer->turnToPosPID(345.0, 6.0);
+  gamer->fixed(-28.0); // makes sense
+  gamer->turnToPosPID(5.0, 6.0); // we are dangerously close to DQ- tries to help w/ that
+  gamer->fixed(-5.0);
+
+  // clamp mogo & move AWAY from line
+  mogoMech.set(false);
+  gamer->fixed(20.0);
+
+
   //gamer->turnToPosPID(240.0, 8.0);
 
   // // spin intake for 500ms
