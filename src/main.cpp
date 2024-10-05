@@ -63,6 +63,7 @@ void pre_auton(void) {
   // Example: clearing encoders, setting servo positions, ...
   robotBase.resetAllEncoders();
   botGyro->resetGyroWithWait();
+  //intakeMotor.setStopping(vex::hold);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -77,6 +78,57 @@ void pre_auton(void) {
 
 void autonomous(void) {
   uint32_t setTime;
+
+  // go to mogo, pick up, & score preload
+  mogoMech.set(true);
+  gamer->fixed(-30.0);
+  mogoMech.set(false);
+  intakeMotor.spin(vex::forward, 100, vex::pct);
+  intakeHoodMotor.spin(vex::forward, 100, vex::pct);
+  setTime = vex::timer::system() + 2500;
+  while (vex::timer::system() <= setTime) {vex::wait(5, vex::msec);}; // wait for score
+  intakeMotor.spin(vex::forward, 0, vex::pct);
+  intakeHoodMotor.spin(vex::forward, 0, vex::pct);
+
+  // let go of mogo & intake next disc
+  mogoMech.set(true);
+  gamer->turnToPosPID(59.744, 6.0);
+  intakeMotor.spin(vex::forward, 100, vex::pct);
+  gamer->fixed(27.785);
+  setTime = vex::timer::system() + 100;
+  while (vex::timer::system() <= setTime) {vex::wait(5, vex::msec);}; // wait for full intake hold
+  intakeMotor.spin(vex::forward, 0, vex::pct);
+
+  // move to first move of mogo
+  gamer->turnToPosPID(270.0, 6.0);
+  gamer->fixed(-13.856);
+  gamer->turnToPosPID(0.0, 6.0);
+  gamer->fixed(-24.0);
+  // gamer->turnToPosPID(330.0, 6.0);
+  // gamer->fixed(-27.71);
+
+  // move to mogo
+  mogoMech.set(true);
+  gamer->turnToPosPID(30.0, 6.0);
+  gamer->fixed(-18.46);
+  mogoMech.set(false);
+
+  // move back & outtake
+  gamer->fixed(10.0);
+  intakeMotor.spin(vex::forward, 100, vex::pct);
+  intakeHoodMotor.spin(vex::forward, 100, vex::pct);
+  // setTime = vex::timer::system() + 2000;
+  // while (vex::timer::system() <= setTime) {vex::wait(5, vex::msec);}; // wait for full score
+  // intakeMotor.spin(vex::forward, 0, vex::pct);
+  // intakeHoodMotor.spin(vex::forward, 0, vex::pct);
+  // gamer->turnToPosPID(90.0, 6.0);
+  // gamer->fixed(-29.0);
+  // gamer->turnToPosPID(0.0, 6.0);
+  // gamer->fixed(-8.67025403);
+
+
+
+
   //this code sucks kys - bronson
 
   // move forward + intake
@@ -84,104 +136,104 @@ void autonomous(void) {
   //gamer->turnToPosPID(180.0, 4.0);
 
   // pick up MOGO & turn to ring
-  mogoMech.set(true);
-  gamer->fixed(-28.806);
-  mogoMech.set(false);
-  intakeMotor.spin(vex::forward, 100, vex::pct);
-  gamer->turnToPosPID(67.3787, 6.0); // thank the lord for trig
+  // mogoMech.set(true);
+  // gamer->fixed(-28.806);
+  // mogoMech.set(false);
+  // intakeMotor.spin(vex::forward, 100, vex::pct);
+  // gamer->turnToPosPID(58.33, 6.0); // thank the lord for trig
 
-  // (hopefully) intake ring onto mogo
-  gamer->fixed(14.1041);
-  intakeMotor.spin(vex::forward, 0, vex::pct);
-  gamer->fixed(-6.0);
-  intakeMotor.spin(vex::forward, 100, vex::pct);
-  intakeHoodMotor.spin(vex::forward, 100, vex::pct);
-  gamer->fixed(8.0);
-
-  setTime = vex::timer::system() + 500; // wait so bot hopefully scores
-  while (vex::timer::system() <= setTime) {vex::wait(5, vex::msec);} // wait loop
-
-  // let go of mogo 
-  mogoMech.set(true);
-  gamer->fixed(-8.0); //move it out of the way
-  gamer->fixed(8.0);
-  // if we haven't scored it's a lost cause
-  intakeMotor.spin(vex::forward, 0, vex::pct);
-  intakeHoodMotor.spin(vex::forward, 0, vex::pct);
-
-  // turn & move to second mogo
-  gamer->turnToPosPID(345.0, 6.0);
-  gamer->fixed(-28.0); // makes sense
-  gamer->turnToPosPID(5.0, 6.0); // we are dangerously close to DQ- tries to help w/ that
-  gamer->fixed(-5.0);
-
-  // clamp mogo & move AWAY from line
-  mogoMech.set(false);
-  gamer->fixed(20.0);
-
-
-  //gamer->turnToPosPID(240.0, 8.0);
-
-  // // spin intake for 500ms
-  // setTime = vex::timer::system() + 500;
-  // while (vex::timer::system() <= setTime) {
-  //   vex::wait(5, vex::msec);
-  // }
+  // // (hopefully) intake ring onto mogo
+  // gamer->fixed(20.1996);
   // intakeMotor.spin(vex::forward, 0, vex::pct);
+  // gamer->fixed(-6.0);
+  // intakeMotor.spin(vex::forward, 100, vex::pct);
+  // intakeHoodMotor.spin(vex::forward, 100, vex::pct);
+  // gamer->fixed(8.0);
 
-  // while(!botGyro->isResetFinished()) {
-  //   // do nothing
-  //   vex::wait(5, vex::msec);
-  // }
+  // setTime = vex::timer::system() + 500; // wait so bot hopefully scores
+  // while (vex::timer::system() <= setTime) {vex::wait(5, vex::msec);} // wait loop
 
-  // //move back, spin, then move more forward (don't get hit on thing)
-  // gamer->fixed(-10.0);
-  //     // force turn left
-  //     // setTime = vex::timer::system() + 60;
-  //     // while (vex::timer::system() < setTime) {
-  //     //   botMovement.turn(100);
-  //     // }
-  // gamer->turnToPosPID(180.0, 8.0);
-  // gamer->fixed(18.0);
+  // // let go of mogo 
+  // mogoMech.set(true);
+  // gamer->fixed(-8.0); //move it out of the way
+  // gamer->fixed(8.0);
+  // // if we haven't scored it's a lost cause
+  // intakeMotor.spin(vex::forward, 0, vex::pct);
+  // intakeHoodMotor.spin(vex::forward, 0, vex::pct);
 
-  // // turn and go forward into goal (multiple steps)
-  //   gamer->turnToPosPID(140.0, 8.0);
-  //   gamer->fixed(26.0);
-  //   gamer->turnToPosPID(90, 8.0);
-  //   // spin outtake before we go into goal... (and go in)
-  //     intakeMotor.spin(vex::forward, 100, vex::pct);
-  //     setTime = vex::timer::system() + 200;
-  //     while (vex::timer::system() < setTime) {
-  //       vex::wait(5, vex::msec);
-  //     }
-  //     gamer->fixed(12.0);
-  //   // leave goal and turn to triballs
-  //   gamer->fixed(-22.0);
-  //   intakeMotor.spin(vex::forward, -100, vex::pct);
-  //   gamer->turnToPosPID(33.0, 8.0);
-  //   gamer->fixed(46.0);
-  //   intakeMotor.spin(vex::forward, 0, vex::pct);
-  //   // turn back to goal and outtake
-  //   gamer->turnToPosPID(160.0, 8.0);
-  //   intakeMotor.spin(vex::forward, 100, vex::pct);
-  //   gamer->fixed(30.0);
-  //   // turn to goal
-  //   // sex
-  //     gamer->fixed(30.0);
-  //     intakeMotor.spin(vex::forward, 0, vex::pct);
-  //     while(true) {
-  //       gamer->fixed(-10.0);
-  //       vex::wait(50, vex::msec);
-  //       gamer->fixed(10.0);
-  //       vex::wait(50, vex::msec);
-  //     }
+  // // turn & move to second mogo
+  // gamer->turnToPosPID(3.88, 6.0);
+  // gamer->fixed(-34.215); // makes sense
+  // // gamer->turnToPosPID(5.0, 6.0); // we are dangerously close to DQ- tries to help w/ that
+  // // gamer->fixed(-5.0);
+
+  // // clamp mogo & move AWAY from line
+  // mogoMech.set(false);
+  // gamer->fixed(20.0);
 
 
-  // // gamer->turnToPosPID(90.0, 0.1);
+  // //gamer->turnToPosPID(240.0, 8.0);
 
-  // // ..........................................................................
-  // // Insert autonomous user code here.
-  // // ..........................................................................
+  // // // spin intake for 500ms
+  // // setTime = vex::timer::system() + 500;
+  // // while (vex::timer::system() <= setTime) {
+  // //   vex::wait(5, vex::msec);
+  // // }
+  // // intakeMotor.spin(vex::forward, 0, vex::pct);
+
+  // // while(!botGyro->isResetFinished()) {
+  // //   // do nothing
+  // //   vex::wait(5, vex::msec);
+  // // }
+
+  // // //move back, spin, then move more forward (don't get hit on thing)
+  // // gamer->fixed(-10.0);
+  // //     // force turn left
+  // //     // setTime = vex::timer::system() + 60;
+  // //     // while (vex::timer::system() < setTime) {
+  // //     //   botMovement.turn(100);
+  // //     // }
+  // // gamer->turnToPosPID(180.0, 8.0);
+  // // gamer->fixed(18.0);
+
+  // // // turn and go forward into goal (multiple steps)
+  // //   gamer->turnToPosPID(140.0, 8.0);
+  // //   gamer->fixed(26.0);
+  // //   gamer->turnToPosPID(90, 8.0);
+  // //   // spin outtake before we go into goal... (and go in)
+  // //     intakeMotor.spin(vex::forward, 100, vex::pct);
+  // //     setTime = vex::timer::system() + 200;
+  // //     while (vex::timer::system() < setTime) {
+  // //       vex::wait(5, vex::msec);
+  // //     }
+  // //     gamer->fixed(12.0);
+  // //   // leave goal and turn to triballs
+  // //   gamer->fixed(-22.0);
+  // //   intakeMotor.spin(vex::forward, -100, vex::pct);
+  // //   gamer->turnToPosPID(33.0, 8.0);
+  // //   gamer->fixed(46.0);
+  // //   intakeMotor.spin(vex::forward, 0, vex::pct);
+  // //   // turn back to goal and outtake
+  // //   gamer->turnToPosPID(160.0, 8.0);
+  // //   intakeMotor.spin(vex::forward, 100, vex::pct);
+  // //   gamer->fixed(30.0);
+  // //   // turn to goal
+  // //   // sex
+  // //     gamer->fixed(30.0);
+  // //     intakeMotor.spin(vex::forward, 0, vex::pct);
+  // //     while(true) {
+  // //       gamer->fixed(-10.0);
+  // //       vex::wait(50, vex::msec);
+  // //       gamer->fixed(10.0);
+  // //       vex::wait(50, vex::msec);
+  // //     }
+
+
+  // // // gamer->turnToPosPID(90.0, 0.1);
+
+  // // // ..........................................................................
+  // // // Insert autonomous user code here.
+  // // // ..........................................................................
 }
 
 /*---------------------------------------------------------------------------*/
