@@ -76,6 +76,7 @@ void pre_auton(void) {
 /*---------------------------------------------------------------------------*/
 
 void autonomous(void) {
+  // WARNING: UNTESTED
   uint32_t setTime;
   //this code sucks kys - bronson
 
@@ -88,7 +89,7 @@ void autonomous(void) {
   gamer->fixed(-28.806);
   mogoMech.set(false);
   intakeMotor.spin(vex::forward, 100, vex::pct);
-  gamer->turnToPosPID(67.3787, 6.0); // thank the lord for trig
+  gamer->turnToPosPID(292.6213, 6.0); // thank the lord for trig
 
   // (hopefully) intake ring onto mogo
   gamer->fixed(14.1041);
@@ -110,9 +111,9 @@ void autonomous(void) {
   intakeHoodMotor.spin(vex::forward, 0, vex::pct);
 
   // turn & move to second mogo
-  gamer->turnToPosPID(345.0, 6.0);
+  gamer->turnToPosPID(15.0, 6.0);
   gamer->fixed(-28.0); // makes sense
-  gamer->turnToPosPID(5.0, 6.0); // we are dangerously close to DQ- tries to help w/ that
+  gamer->turnToPosPID(355.0, 6.0); // we are dangerously close to DQ- tries to help w/ that
   gamer->fixed(-5.0);
 
   // clamp mogo & move AWAY from line
