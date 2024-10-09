@@ -6,7 +6,7 @@
 #include "lib/bot/base.hpp"
 #include "PID.hpp"
 
-#define PI 3.14159265358979343846
+#define PI 3.1415926535897932384626
 
 class Odometry {
     private:
@@ -14,11 +14,10 @@ class Odometry {
         Base* robotBase;
 
         Vector2 pos;
-        float wheelDiam = 1.0;
-        float gearRatio = 0.125; //36::48
+        float wheelDiam = 1.0; //default value
+        float gearRatio = 0.75; //36::48
 
         double lastOdomPos;
-
 
 
         double convertDegToRad(double degrees) {
@@ -27,8 +26,6 @@ class Odometry {
         double convertRadToDeg(double rad) {
             return rad * (180.0/PI);
         }
-
-
 
 
     public:
@@ -70,8 +67,9 @@ class Odometry {
 
         //useful funcs.
         void pollAndUpdateOdom() {
+            double currentAveragedRotation =  this->robotBase->getAverageRotationBothSides();
             // find averaged movement + convert to inches
-            double averagedMovementDistance = this->robotBase->getAverageRotationBothSides() - this->lastOdomPos;
+            double averagedMovementDistance = currentAveragedRotation - this->lastOdomPos;
             averagedMovementDistance = getActualPosFromWheelRot(averagedMovementDistance);
 
             // get heading + calculate values (in inches) from that
@@ -87,10 +85,10 @@ class Odometry {
             // set last pos to use in next update
             this->pos.x += xChange;
             this->pos.y += yChange;
-            this->lastOdomPos = this->robotBase->getAverageRotationBothSides();
+            this->lastOdomPos = currentAveragedRotation;
         }
         double getActualPosFromWheelRot(double rot) {
-            return rot * this->wheelDiam * this->gearRatio;
+            return rot * this->wheelDiam * PI * this->gearRatio;
         }
 
          double xMult(double deg) {
