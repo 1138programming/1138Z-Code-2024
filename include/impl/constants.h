@@ -9,27 +9,28 @@ const float KSplitTankLeftMult = 1.0;
 const float KSplitTankRightMult = 1.0;
 
 // drive base
-const int KBackRightMotorPort = vex::PORT13; // rev
-const int KMiddleRightMotorPort = vex::PORT12;
-const int KFrontRightMotorPort = vex::PORT11; // rev
+const int KBackRightMotorPort = vex::PORT20;
+const int KMiddleRightMotorPort = vex::PORT7; // rev
+const int KFrontRightMotorPort = vex::PORT8;
 
-const int KBackLeftMotorPort = vex::PORT18;
-const int KMiddleLeftMotorPort = vex::PORT20; // rev
-const int KFrontLeftMotorPort = vex::PORT19;
+const int KBackLeftMotorPort = vex::PORT19; // rev
+const int KMiddleLeftMotorPort = vex::PORT18; // rev
+const int KFrontLeftMotorPort = vex::PORT9;
 
 
-const bool KBackRightMotorRev = true;
-const bool KMiddleRightMotorRev = false;
-const bool KFrontRightMotorRev = true;
+const bool KBackRightMotorRev = false;
+const bool KMiddleRightMotorRev = true;
+const bool KFrontRightMotorRev = false;
 
 const bool KBackLeftMotorRev = false;
-const bool KMiddleLeftMotorRev = true;
-const bool KFrontLeftMotorRev = false;
+const bool KMiddleLeftMotorRev = false;
+const bool KFrontLeftMotorRev = true;
 
 // intake
-const int KIntakeMotorPort = vex::PORT1;
-const int KIntakeHoodMotorPort = vex::PORT2;
-const float KIntakeMotorSpeedMult = 1.0;
+const int KIntakeMotorPort = vex::PORT10;
+const int KIntakeHoodMotorPort = vex::PORT1;
+const float KIntakeMotorSpeedMult = 0.5;
+const float KIntakeHoodMotorSpeedMult = 1.0;
 
 
 // odom
