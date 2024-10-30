@@ -9,16 +9,16 @@ const float KSplitTankLeftMult = 1.0;
 const float KSplitTankRightMult = 1.0;
 
 // drive base
-const int KBackRightMotorPort = vex::PORT20;
+const int KBackRightMotorPort = vex::PORT20; // rev
 const int KMiddleRightMotorPort = vex::PORT7; // rev
-const int KFrontRightMotorPort = vex::PORT8;
+const int KFrontRightMotorPort = vex::PORT8; 
 
 const int KBackLeftMotorPort = vex::PORT19; // rev
 const int KMiddleLeftMotorPort = vex::PORT18; // rev
 const int KFrontLeftMotorPort = vex::PORT9;
 
 
-const bool KBackRightMotorRev = false;
+const bool KBackRightMotorRev = true;
 const bool KMiddleRightMotorRev = true;
 const bool KFrontRightMotorRev = false;
 
