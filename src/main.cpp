@@ -282,6 +282,12 @@ void usercontrol(void) {
         mogoMechToggle.update(mainController.getButton(BUTTON_L1));
       }
         
+      //prints pos of robot every frame on the brain
+      botOdom->pollAndUpdateOdom();
+      Vector2 currentPos = botOdom->getPos();
+      mainController.getVexObject()->Screen.clearScreen();
+      mainController.getVexObject()->Screen.print("%lf, %lf", currentPos.x, currentPos.y);
+
       wait(5, msec); // Sleep the task for a short amount of time to prevent wasted resources.
   }
 }

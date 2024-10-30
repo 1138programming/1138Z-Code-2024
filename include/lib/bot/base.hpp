@@ -41,7 +41,7 @@ class Base {
             this->left.resetEncoders();
             this->right.resetEncoders();
         }
-        double getAverageRotationBothSides() {
+        double getAverageWheelRotationBothSides() {
             return ((this->left.averageRot(vex::rotationUnits::deg) + this->right.averageRot(vex::rotationUnits::deg))/2.0)/360.0;
         }
         

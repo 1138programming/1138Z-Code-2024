@@ -129,8 +129,8 @@ class OdomMovement {
                 Vector2 currentPos = this->odom->getPos();
                 
                 double dif = this->odom->pythagoreanThrmBetweenTwoPoints(initialPos, currentPos);
-                //cont.Screen.print("%f, %f", this->odom->getX(), this->odom->getY());
-                cont.Screen.print("%lf", dif);
+                cont.Screen.print("%f, %f", this->odom->getX(), this->odom->getY());
+                // cont.Screen.print("%lf", dif);
 
                 double movement;
                 if (negative) {
