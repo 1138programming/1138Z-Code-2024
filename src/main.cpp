@@ -247,8 +247,6 @@ void autonomous(void) {
 /*---------------------------------------------------------------------------*/
 
 void usercontrol(void) {
-  robotBase.resetAllEncoders();
-  botGyro->resetGyroWithWait();
   // User control code here, inside the loop
   while (1) {
       // This is the main execution loop for the user control program.
@@ -260,6 +258,12 @@ void usercontrol(void) {
       // update your motors, etc.
       // ........................................................................
       
+      botOdom->pollAndUpdateOdom();
+      Vector2 currentPos = botOdom->getPos();
+      mainController.getVexObject()->Screen.clearLine(0);
+      mainController.getVexObject()->Screen.setCursor(0, 0);
+      mainController.getVexObject()->Screen.print("%f, %f", botOdom->getX(), botOdom->getY());
+
       botMovement.driveSplitArcade(&mainController);
       //botHangPneumatics.update(mainController.getButton(BUTTON_B));
 
@@ -285,10 +289,6 @@ void usercontrol(void) {
       }
         
       //prints pos of robot every frame on the brain
-      botOdom->pollAndUpdateOdom();
-      Vector2 currentPos = botOdom->getPos();
-      mainController.getVexObject()->Screen.clearLine(0);
-      mainController.getVexObject()->Screen.print("%lf, %lf", botOdom->getX(), botOdom->getY());
 
       wait(5, msec); // Sleep the task for a short amount of time to prevent wasted resources.
   }
