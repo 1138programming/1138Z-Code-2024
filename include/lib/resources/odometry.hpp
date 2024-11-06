@@ -67,10 +67,9 @@ class Odometry {
 
         //useful funcs.
         void pollAndUpdateOdom() {
-            double totalWheelMovement =  this->robotBase->getAverageWheelRotationBothSides();
+            double totalWheelMovement = this->robotBase->getAverageWheelRotationBothSides();
             // find averaged movement + convert to inches
-            double averagedMovementDistance = totalWheelMovement - this->lastOdomPos; // this is averaged rotations not distance
-                averagedMovementDistance = getActualPosFromWheelRot(averagedMovementDistance); // now it is calculated as distance
+            double averagedMovementDistance = getActualPosFromWheelRot(totalWheelMovement - this->lastOdomPos);
 
             // get heading + calculate values (in inches) from that
             double gyroHeading = this->gyro->getHeading();
