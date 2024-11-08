@@ -247,6 +247,8 @@ void autonomous(void) {
 /*---------------------------------------------------------------------------*/
 
 void usercontrol(void) {
+  robotBase.resetAllEncoders();
+  botGyro->resetGyroWithWait();
   // User control code here, inside the loop
   while (1) {
       // This is the main execution loop for the user control program.
