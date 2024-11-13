@@ -14,9 +14,10 @@
 #include "lib/resources/controller.hpp"
 #include "lib/resources/PID.hpp"
 #include "lib/resources/holdable.hpp"
-#include "impl/bot/intake.hpp"
+#include "impl/bot/intake.hpp"// file not used
 #include "impl/bot/hang.hpp"
 #include "lib/commands/odomMovement.hpp"
+#include "impl/bot/autonSelector.hpp"
 
 
 using namespace vex;
@@ -48,6 +49,8 @@ Toggleable intakeReversed;
 Toggleable mogoMechToggle;
 vex::digital_out mogoMech(botBrain.ThreeWirePort.A);
 
+AutonSelector autonSelector(mainController.getVexObject());
+
 /*---------------------------------------------------------------------------*/
 /*                          Pre-Autonomous Functions                         */
 /*                                                                           */
@@ -59,6 +62,10 @@ vex::digital_out mogoMech(botBrain.ThreeWirePort.A);
 /*---------------------------------------------------------------------------*/
 
 void pre_auton(void) {
+  autonSelector.add_auton("Blue: Left + Mid");
+  autonSelector.add_auton("Blue: Right + Mid");
+  autonSelector.add_auton("Blue: Right (No Mid)");
+
   // All activities that occur before the competition starts
   // Example: clearing encoders, setting servo positions, ...
   robotBase.resetAllEncoders();
@@ -249,8 +256,13 @@ void autonomous(void) {
 void usercontrol(void) {
   robotBase.resetAllEncoders();
   botGyro->resetGyroWithWait();
+  autonSelector.updateScreen();
   unsigned long frame = 0;
   // User control code here, inside the loop
+  while(true) {
+    autonSelector.update();
+    wait(5, msec);
+  }
   while (1) {
       // This is the main execution loop for the user control program.
       // Each time through the loop your program should update motor + servo
