@@ -62,9 +62,17 @@ AutonSelector autonSelector(mainController.getVexObject());
 /*---------------------------------------------------------------------------*/
 
 void pre_auton(void) {
-  autonSelector.add_auton("Blue: Left + Mid");
-  autonSelector.add_auton("Blue: Right + Mid");
-  autonSelector.add_auton("Blue: Right (No Mid)");
+  autonSelector.add_auton("Do nothing");
+  autonSelector.add_auton("2 Stack AWP +0");
+  autonSelector.add_auton("Right + Mid");
+  autonSelector.add_auton("Right (No Mid)");
+
+  autonSelector.updateScreen();
+  
+  while (!Competition.isAutonomous() || !Competition.isDriverControl()) {
+    autonSelector.update();
+    vex::wait(5, vex::msec);
+  }
 
   // All activities that occur before the competition starts
   // Example: clearing encoders, setting servo positions, ...
@@ -85,6 +93,57 @@ void pre_auton(void) {
 
 void autonomous(void) {
   uint32_t setTime;
+  int currentAuton = autonSelector.getCurrentAuton();
+  bool redAuton = autonSelector.getAutonRedSide();
+
+  switch(currentAuton) {
+    //do nothing
+    case 0: {
+      //cooking cooking cooking
+    }
+    // two mogo side
+    case 1: {
+      mogoMech.set(true);
+      gamer->fixed(-38.75);
+      mogoMech.set(false);
+      intakeMotor.spin(vex::forward, 100, vex::pct);
+      intakeHoodMotor.spin(vex::forward, 100, vex::pct);
+      setTime = vex::timer::system() + 500;
+      while (vex::timer::system() <= setTime) {vex::wait(5, vex::msec);}; // wait for score
+      intakeMotor.spin(vex::forward, 0, vex::pct);
+      intakeHoodMotor.spin(vex::forward, 0, vex::pct);
+
+      gamer->turnToPosPID(90.0, 6.0);
+      intakeMotor.spin(vex::forward, 100, vex::pct);
+      intakeHoodMotor.spin(vex::forward, 100, vex::pct);
+      gamer->fixed(24.0);
+      setTime = vex::timer::system() + 1000;
+      while (vex::timer::system() <= setTime) {vex::wait(5, vex::msec);}; // wait for score
+      intakeMotor.spin(vex::forward, 0, vex::pct);
+      intakeHoodMotor.spin(vex::forward, 0, vex::pct);
+
+      gamer->turnToPosPID(315.0, 6.0);
+      mogoMech.set(false);
+      gamer->fixed(16.971);
+      gamer->turnToPosPID(90.0, 6.0);
+      gamer->fixed(48.0);
+      gamer->turnToPosPID(45.0, 6.0);
+      gamer->fixed(16.971);
+      mogoMech.set(true);
+      intakeMotor.spin(vex::forward, 100, vex::pct);
+      intakeHoodMotor.spin(vex::forward, 100, vex::pct);
+      gamer->turnToPosPID(270.0, 6.0);
+      gamer->fixed(24);
+      setTime = vex::timer::system() + 1000;
+      while (vex::timer::system() <= setTime) {vex::wait(5, vex::msec);}; // wait for score
+      intakeMotor.spin(vex::forward, 0, vex::pct);
+      intakeHoodMotor.spin(vex::forward, 0, vex::pct);
+      gamer->turnToPosPID(90.0, 6.0);
+      gamer->fixed(48.0);
+      break;
+    }
+
+  }
 
   // go to mogo, pick up, & score preload
   mogoMech.set(true);
@@ -256,13 +315,8 @@ void autonomous(void) {
 void usercontrol(void) {
   robotBase.resetAllEncoders();
   botGyro->resetGyroWithWait();
-  autonSelector.updateScreen();
   unsigned long frame = 0;
   // User control code here, inside the loop
-  while(true) {
-    autonSelector.update();
-    wait(5, msec);
-  }
   while (1) {
       // This is the main execution loop for the user control program.
       // Each time through the loop your program should update motor + servo

@@ -9,8 +9,9 @@ class AutonSelector {
     private:
         vex::controller* controller;
         std::vector<std::string> autonList;
-        int currentAuton;
-        bool leftLastPressed, rightLastPressed;
+        int currentAuton = 0;
+        bool redAuton = true;
+        bool leftLastPressed, rightLastPressed, aLastPressed;
     public:
         AutonSelector(vex::controller* controller) {
             this->controller = controller;
@@ -28,6 +29,7 @@ class AutonSelector {
 
             bool leftPressed = this->controller->ButtonLeft.pressing() || (this->controller->Axis4.position() > 90);
             bool rightPressed = this->controller->ButtonRight.pressing() || (this->controller->Axis4.position() < -90);
+            bool aPressed = this->controller->ButtonA.pressing() || (this->controller->Axis3.position() > 90) || (this->controller->Axis3.position() < -90);
 
             if (!leftLastPressed && leftPressed) {
                 this->currentAuton--;
@@ -35,6 +37,10 @@ class AutonSelector {
             }
             if (!rightLastPressed && rightPressed) {
                 this->currentAuton++;
+                numChanged = true;
+            }
+            if(!aLastPressed && aPressed) {
+                this->redAuton = !redAuton;
                 numChanged = true;
             }
 
@@ -51,18 +57,22 @@ class AutonSelector {
 
             this->leftLastPressed = leftPressed;
             this->rightLastPressed = rightPressed;
+            this->aLastPressed = aPressed;
         }
 
         void updateScreen() {
             this->controller->Screen.setCursor(0,0);
             this->controller->Screen.clearLine();
-            this->controller->Screen.print(this->autonList.at(this->currentAuton).c_str());
+            this->controller->Screen.print((this->redAuton ? "Red: " : "Blue: " +  this->autonList.at(this->currentAuton)).c_str());
         }
 
         int getCurrentAuton() {
             return this->currentAuton;
         }
 
+        bool getAutonRedSide() {
+            return this-> redAuton;
+        }
 };
 
 

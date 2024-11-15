@@ -46,6 +46,14 @@ class OdomMovement {
             this->odomTurningPID = odomTurningPID;
         }
 
+        //calc is short for calculation
+        double angleSideCalc(double angle, bool redSide) {
+            if(!redSide) {
+                return (360.0 - angle);
+            }
+            return angle;
+        }
+
         void turnToPosPID(double targetPos, double allowedError) {
             vex::controller cont(vex::controllerType::primary);
             // make 0s            
