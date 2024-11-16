@@ -9,6 +9,7 @@ class OdomMovement {
         Odometry* odom;
         Movement* robotMovement;
         Gyro* gyro;
+        AutonSelector* autoSelector;
 
         PID* odomTurningPID;
         PID* odomMovementPID;
@@ -37,21 +38,13 @@ class OdomMovement {
             return sweepAngle;
         }
     public:
-        OdomMovement(Odometry* odom, Movement* robotMovement, Gyro* gyro, PID* odomMovementPID, PID* odomTurningPID) {
+        OdomMovement(Odometry* odom, Movement* robotMovement, Gyro* gyro, PID* odomMovementPID, PID* odomTurningPID, AutonSelector* autoSelector) {
             this->odom = odom;
             this->robotMovement = robotMovement;
             this->gyro = gyro;
 
             this->odomMovementPID = odomMovementPID;
             this->odomTurningPID = odomTurningPID;
-        }
-
-        //calc is short for calculation
-        double angleSideCalc(double angle, bool redSide) {
-            if(!redSide) {
-                return (360.0 - angle);
-            }
-            return angle;
         }
 
         void turnToPosPID(double targetPos, double allowedError) {
@@ -64,6 +57,26 @@ class OdomMovement {
                 cont.Screen.clearLine(0);
                 cont.Screen.setCursor(0,0);
 
+                this->odom->pollAndUpdateOdom();
+                double PIDVal = this->odomTurningPID->calculate(getDistBetweenDeg(this->gyro->getHeading(), targetPos));
+                
+                cont.Screen.print("%f, %f", PIDVal,/*getDistBetweenDeg(this->gyro->getHeading(), targetPos),*/ this->gyro->getHeading());
+                this->robotMovement->turn(PIDVal);
+                // wait for bot to move
+                vex::wait(5, vex::msec);
+            }
+        }
+        void turnToPosPIDSideFixed(double targetPos, double allowedError) {
+            targetPos = this->autoSelector->getFixedAngle(targetPos);
+            
+            vex::controller cont(vex::controllerType::primary);
+            // make 0s            
+            this->odomTurningPID->setSetpoint(0.0);
+            this->odomTurningPID->setAllowedError(allowedError);
+
+            while(this->odomTurningPID->isPidFinished() == false) {
+                cont.Screen.clearLine(0);
+                cont.Screen.setCursor(0,0);
                 this->odom->pollAndUpdateOdom();
                 double PIDVal = this->odomTurningPID->calculate(getDistBetweenDeg(this->gyro->getHeading(), targetPos));
                 

@@ -38,18 +38,18 @@ vex::motor intakeMotor(KIntakeMotorPort, false); // rev so it starts the correct
 vex::motor intakeHoodMotor(KIntakeHoodMotorPort, true);
 Hang botHangPneumatics;
 
+AutonSelector autonSelector(mainController.getVexObject());
+
 vex::inertial* internalGyro = new vex::inertial(KInertialSensorPort);
 Gyro* botGyro = new Gyro(internalGyro);
 Odometry* botOdom = new Odometry(KOdomWheelSize, &robotBase, botGyro);
-OdomMovement* gamer = new OdomMovement(botOdom, &botMovement, botGyro, &movementPID, &turningPID);
+OdomMovement* gamer = new OdomMovement(botOdom, &botMovement, botGyro, &movementPID, &turningPID, &autonSelector);
 
 Toggleable intakeEnabled;
 Toggleable intakeReversed;
 
 Toggleable mogoMechToggle;
 vex::digital_out mogoMech(botBrain.ThreeWirePort.A);
-
-AutonSelector autonSelector(mainController.getVexObject());
 
 /*---------------------------------------------------------------------------*/
 /*                          Pre-Autonomous Functions                         */
