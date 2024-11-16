@@ -111,8 +111,6 @@ class OdomMovement {
             while (this->odomMovementPID->isPidFinished() == false);
         }
         void fixed(double inches) {
-            inches *= kInchesFixMult;
-
             bool negative = false;
             if (inches < 0) {
                 negative = true;
@@ -122,7 +120,6 @@ class OdomMovement {
             Vector2 initialPos = this->odom->getPos();
             // set up PID
             this->odomMovementPID->setSetpoint(0.0);
-            this->odomMovementPID->setAllowedError(0.02);
 
             vex::controller cont(vex::controllerType::primary);
 
