@@ -23,7 +23,7 @@ class PID {
         double outputMin;
         double outputMax;
 
-        double bias;
+        double bias = 0.0;
         double allowedError = 0.1;
 
         bool isFinished = false;

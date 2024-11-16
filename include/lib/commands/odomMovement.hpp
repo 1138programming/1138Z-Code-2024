@@ -3,6 +3,7 @@
 
 #include "lib/resources/odometry.hpp"
 #include "movement.hpp"
+#include "../include/impl/bot/autonSelector.hpp"
 
 class OdomMovement {
     private:
@@ -66,9 +67,18 @@ class OdomMovement {
                 vex::wait(5, vex::msec);
             }
         }
-        void turnToPosPIDSideFixed(double targetPos, double allowedError) {
-            targetPos = this->autoSelector->getFixedAngle(targetPos);
+
+        double fixAngle(double angle, bool isRed) {
+            if (!isRed) {
+                return (360.0 - angle);
+            }
+            return angle;
+        }
+
+        void turnToPosPIDSideFixed(double targetPos, double allowedError, bool isRed) {
             
+            targetPos = fixAngle(targetPos, isRed);
+
             vex::controller cont(vex::controllerType::primary);
             // make 0s            
             this->odomTurningPID->setSetpoint(0.0);
@@ -122,6 +132,43 @@ class OdomMovement {
                 }
             }
             while (this->odomMovementPID->isPidFinished() == false);
+        }
+        void fixedSlow(double inches, int speedPct) {
+            bool negative = false;
+            if (inches < 0) {
+                negative = true;
+            }
+            // get vector2s
+            this->odom->pollAndUpdateOdom();
+            Vector2 initialPos = this->odom->getPos();
+
+            vex::controller cont(vex::controllerType::primary);
+
+            double movement;
+
+            do {
+                // controller stuff
+                cont.Screen.clearLine(0);
+                vex::wait(5, vex::msec);
+                cont.Screen.setCursor(0,0);
+
+                this->odom->pollAndUpdateOdom();
+
+                Vector2 currentPos = this->odom->getPos();
+                
+                double dif = this->odom->pythagoreanThrmBetweenTwoPoints(initialPos, currentPos);
+                cont.Screen.print("%f, %f", this->odom->getX(), this->odom->getY());
+                // cont.Screen.print("%lf", dif);
+
+                if (negative) {
+                    movement = ( );
+                }
+                else {
+                    movement = (inches - dif);
+                }
+                this->robotMovement->robotBase->driveBothSides(negative ? speedPct : -speedPct);
+
+            } while(movement > 1 || movement < -1);
         }
         void fixed(double inches) {
             bool negative = false;
