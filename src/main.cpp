@@ -49,7 +49,7 @@ Toggleable intakeReversed;
 Toggleable mogoMechToggle;
 vex::digital_out mogoMech(botBrain.ThreeWirePort.A);
 
-// AutonSelector autonSelector(mainController.getVexObject());
+AutonSelector autonSelector(mainController.getVexObject());
 
 /*---------------------------------------------------------------------------*/
 /*                          Pre-Autonomous Functions                         */
@@ -62,22 +62,23 @@ vex::digital_out mogoMech(botBrain.ThreeWirePort.A);
 /*---------------------------------------------------------------------------*/
 
 void pre_auton(void) {
-  // autonSelector.add_auton("Do nothing");
-  // autonSelector.add_auton("2 Stack AWP +0");
-  // autonSelector.add_auton("Right + Mid");
-  // autonSelector.add_auton("Right (No Mid)");
+  robotBase.resetAllEncoders();
+  botGyro->resetGyroWithWait();
+
+  autonSelector.add_auton("Do nothing");
+  autonSelector.add_auton("2 Stack AWP +0");
+  autonSelector.add_auton("Right + Mid");
+  autonSelector.add_auton("Right (No Mid)");
 
   // autonSelector.updateScreen();
   
-  // while (!Competition.isAutonomous() || !Competition.isDriverControl()) {
-  //   autonSelector.update();
-  //   vex::wait(5, vex::msec);
-  // }
+  while(!Competition.isEnabled()) {
+    autonSelector.update();
+    vex::wait(5, vex::msec);
+  }
 
   // All activities that occur before the competition starts
   // Example: clearing encoders, setting servo positions, ...
-  robotBase.resetAllEncoders();
-  botGyro->resetGyroWithWait();
   //intakeMotor.setStopping(vex::hold);
 }
 
@@ -98,9 +99,10 @@ void autonomous(void) {
   // botGyro->resetGyroWithWait();
 
   //temporary for testing specific auton
-  int currentAuton = 2;
-  
-  switch(currentAuton) {
+  autonSelector.setAuton(2);
+  autonSelector.setAutonRedSide(true);
+
+  switch(autonSelector.getCurrentAuton()) {
     //do nothing
     case 0: {
       //just do nothing

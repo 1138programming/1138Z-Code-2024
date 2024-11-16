@@ -69,9 +69,22 @@ class AutonSelector {
         int getCurrentAuton() {
             return this->currentAuton;
         }
-
         bool getAutonRedSide() {
-            return this-> redAuton;
+            return this->redAuton;
+        }
+
+        void setAuton(int autonNum) {
+            this->currentAuton = autonNum;
+        }
+        void setAutonRedSide(bool redSide) {
+            this->redAuton = redSide;
+        }
+
+        double getFixedAngle(double angle) {
+            if (!this->redAuton) {
+                return (360.0 - angle);
+            }
+            return angle;
         }
 };
 
