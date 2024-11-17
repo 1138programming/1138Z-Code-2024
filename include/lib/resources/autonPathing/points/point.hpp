@@ -17,9 +17,14 @@ class Point {
             }
         }
     public:
-        Point(DataPointType pointType, ) {
+        Point(DataPointType pointType) {
             this->pointType = pointType;
         }
+        Point(DataPointType pointType, std::vector<char>& data, int index) {
+            this->pointType = pointType;
+            this->readToClass(data, index);
+        }
+
         virtual void readToClass(std::vector<char>& vec, int index) {
             readToVar(&this->hipointPlacement.x, sizeof(float), vec, index);
             readToVar(&this->pointPlacement.y, sizeof(float), vex, index);
