@@ -100,7 +100,7 @@ void autonomous(void) {
   // botGyro->resetGyroWithWait();
 
   //temporary for testing specific auton
-  autonSelector.setAuton(4);
+  autonSelector.setAuton(3);
   autonSelector.setAutonRedSide(true);
 
   // 0 = nothing

@@ -161,7 +161,7 @@ class OdomMovement {
                 // cont.Screen.print("%lf", dif);
 
                 if (negative) {
-                    movement = ( );
+                    movement = (inches + dif);
                 }
                 else {
                     movement = (inches - dif);
