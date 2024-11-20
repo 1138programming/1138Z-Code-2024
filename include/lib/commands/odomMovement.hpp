@@ -5,6 +5,8 @@
 #include "movement.hpp"
 #include "../include/impl/bot/autonSelector.hpp"
 
+#include <iostream>
+
 class OdomMovement {
     private:
         Odometry* odom;
@@ -194,7 +196,7 @@ class OdomMovement {
                 Vector2 currentPos = this->odom->getPos();
                 
                 double dif = this->odom->pythagoreanThrmBetweenTwoPoints(initialPos, currentPos);
-                cont.Screen.print("%f, %f", this->odom->getX(), this->odom->getY());
+                //cont.Screen.print("%f, %f", this->odom->getX(), this->odom->getY());
                 // cont.Screen.print("%lf", dif);
 
                 double movement;
@@ -205,6 +207,8 @@ class OdomMovement {
                     movement = this->odomMovementPID->calculate(inches - dif);
                 }
                 this->robotMovement->robotBase->driveBothSides(movement);
+                //cont.Screen.print("%f", movement);
+                std::cout << movement << std::endl;
 
             } while(this->odomMovementPID->isPidFinished() == false);
         }

@@ -30,7 +30,7 @@ std::vector<vex::motor*> leftMotors{new vex::motor(KBackLeftMotorPort, vex::rati
 std::vector<vex::motor*> rightMotors{new vex::motor(KBackRightMotorPort, vex::ratio6_1, KBackRightMotorRev), new vex::motor(KMiddleRightMotorPort, vex::ratio6_1, KMiddleRightMotorRev), new vex::motor(KFrontRightMotorPort, vex::ratio6_1, KFrontRightMotorRev)};
 Base robotBase(leftMotors, rightMotors);
 PID turningPID(0.0, -0.4, 0.0, 0.0, 100, -100, 0.4);
-PID movementPID(0.0, 4.0, 0.0, 10.0, 100, -100, 1.0);
+PID movementPID(0.0, 4.2, 0.0, 2.0, 100, -100, 0.1);
 Movement botMovement(&robotBase, true, true);
 
 Controller mainController(vex::controllerType::primary);
@@ -70,6 +70,7 @@ void pre_auton(void) {
   autonSelector.add_auton("2 Stack AWP +0");
   autonSelector.add_auton("2 Stack +2");
   autonSelector.add_auton("2 Mogo +2");
+  autonSelector.add_auton("testing");
 
   // autonSelector.updateScreen();
   
@@ -94,13 +95,15 @@ void pre_auton(void) {
 /*---------------------------------------------------------------------------*/
 
 void autonomous(void) {
+  robotBase.resetAllEncoders();
+  botGyro->resetGyroWithWait();
   uint32_t setTime;
   // int currentAuton = autonSelector.getCurrentAuton();
   // bool redAuton = autonSelector.getAutonRedSide();
   // botGyro->resetGyroWithWait();
 
   //temporary for testing specific auton
-  autonSelector.setAuton(3);
+  autonSelector.setAuton(5);
   autonSelector.setAutonRedSide(true);
 
   // 0 = nothing
@@ -211,6 +214,10 @@ void autonomous(void) {
       gamer->turnToPosPIDSideFixed(90.0, 6.0, autonSelector.getAutonRedSide());
       gamer->fixed(34.0);
       gamer->fixedSlow(8.0, 50);
+      break;
+    }
+    case 5: {
+      gamer->fixed(24.0);
       break;
     }
   }
