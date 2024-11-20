@@ -46,7 +46,9 @@ Toggleable intakeEnabled;
 Toggleable intakeReversed;
 
 Toggleable mogoMechToggle;
+Toggleable doingerToggle;
 vex::digital_out mogoMech(botBrain.ThreeWirePort.A);
+vex::digital_out doinger(botBrain.ThreeWirePort.H);
 
 /*---------------------------------------------------------------------------*/
 /*                          Pre-Autonomous Functions                         */
@@ -281,6 +283,9 @@ void usercontrol(void) {
       else {
         mogoMechToggle.update(mainController.getButton(BUTTON_L1));
       }
+
+      doingerToggle.update(mainController.getButton(BUTTON_B));
+      doinger.set(doingerToggle.isEnabled());
         
       wait(5, msec); // Sleep the task for a short amount of time to prevent wasted resources.
   }
