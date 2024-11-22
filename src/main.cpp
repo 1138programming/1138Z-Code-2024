@@ -94,11 +94,13 @@ void pre_auton(void) {
 /*  You must modify the code to add your own robot specific commands here.   */
 /*---------------------------------------------------------------------------*/
 
-void usercontrol(void) {
+void autonomous(void) {
+  //TBD REMOVE FOR COMP
   robotBase.resetAllEncoders();
   botGyro->resetGyroWithWait();
-  movementPID.setBias(10.0);
+  
   uint32_t setTime;
+  movementPID.setBias(10.0);
   // int currentAuton = autonSelector.getCurrentAuton();
   // bool redAuton = autonSelector.getAutonRedSide();
   // botGyro->resetGyroWithWait();
@@ -234,7 +236,6 @@ void usercontrol(void) {
 /*  You must modify the code to add your own robot specific commands here.   */
 /*---------------------------------------------------------------------------*/
 
-/*
 void usercontrol(void) {
   unsigned long frame = 0;
   mogoMechToggle.setEnabled();
@@ -286,13 +287,13 @@ void usercontrol(void) {
       wait(5, msec); // Sleep the task for a short amount of time to prevent wasted resources.
   }
 }
-*/
+
 //
 // Main will set up the competition functions and callbacks.
 //
 int main() {
   // Set up callbacks for autonomous and driver control periods.
-  // Competition.autonomous(autonomous);
+  Competition.autonomous(autonomous);
   Competition.drivercontrol(usercontrol);
 
   // Run the pre-autonomous function.
