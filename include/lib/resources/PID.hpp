@@ -59,10 +59,16 @@ class PID {
         void setAllowedError(double allowedError) {
             this->allowedError = allowedError;
         }
+        void setBias(double bias) {
+            this->bias = bias;
+        }
 
         // getters
         bool isPidFinished() {
             return this->isFinished;
+        }
+        double getBias() {
+            return this->bias;
         }
 
         //useful funcs
@@ -83,7 +89,7 @@ class PID {
             double integral = prevIntegral + error * iterationTime;
             double derivative = (error - prevError) / iterationTime;
 
-            double output = (this->Kp * error) + (this->Ki * integral) + (this->Kd * derivative) + (bias);
+            double output = (this->Kp * error) + (this->Ki * integral) + (this->Kd * derivative);
 
             // set vars up for error   
             this->prevError = error;
@@ -98,7 +104,7 @@ class PID {
             else if (output < this->outputMin) {
                 return this->outputMin;
             }
-
+            
             return output;
         }
 };

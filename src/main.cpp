@@ -29,8 +29,8 @@ competition Competition;
 std::vector<vex::motor*> leftMotors{new vex::motor(KBackLeftMotorPort, vex::ratio6_1, KBackLeftMotorRev), new vex::motor(KMiddleLeftMotorPort, vex::ratio6_1, KMiddleLeftMotorRev), new vex::motor(KFrontLeftMotorPort, vex::ratio6_1, KFrontLeftMotorRev)};
 std::vector<vex::motor*> rightMotors{new vex::motor(KBackRightMotorPort, vex::ratio6_1, KBackRightMotorRev), new vex::motor(KMiddleRightMotorPort, vex::ratio6_1, KMiddleRightMotorRev), new vex::motor(KFrontRightMotorPort, vex::ratio6_1, KFrontRightMotorRev)};
 Base robotBase(leftMotors, rightMotors);
-PID turningPID(0.0, -0.4, 0.0, 0.0, 100, -100, 0.4);
-PID movementPID(0.0, 4.2, 0.0, 2.0, 100, -100, 0.1);
+PID turningPID(0.0, -0.45, 0.0, 0.0, 100, -100, 0.4);
+PID movementPID(0.0, 3.4, 0.0, 0.0, 100, -100, 0.5);
 Movement botMovement(&robotBase, true, true);
 
 Controller mainController(vex::controllerType::primary);
@@ -94,16 +94,17 @@ void pre_auton(void) {
 /*  You must modify the code to add your own robot specific commands here.   */
 /*---------------------------------------------------------------------------*/
 
-void autonomous(void) {
+void usercontrol(void) {
   robotBase.resetAllEncoders();
   botGyro->resetGyroWithWait();
+  movementPID.setBias(10.0);
   uint32_t setTime;
   // int currentAuton = autonSelector.getCurrentAuton();
   // bool redAuton = autonSelector.getAutonRedSide();
   // botGyro->resetGyroWithWait();
 
   //temporary for testing specific auton
-  autonSelector.setAuton(5);
+  autonSelector.setAuton(2);
   autonSelector.setAutonRedSide(true);
 
   // 0 = nothing
@@ -125,10 +126,10 @@ void autonomous(void) {
     // two stack side AWP +0
     case 2: {
       mogoMech.set(false);
-      gamer->fixed(-33.0);
+      gamer->fixed(-35.0);
       mogoMech.set(true);
-      gamer->fixed(-7.0);
-      intakeMotor.spin(vex::forward, 100, vex::pct);
+      // gamer->fixed(-2.0);
+      intakeMotor.spin(vex::forward, 50, vex::pct);
       intakeHoodMotor.spin(vex::forward, 100, vex::pct);
       setTime = vex::timer::system() + 500;
       while (vex::timer::system() <= setTime) {vex::wait(5, vex::msec);}; // wait for score
@@ -136,7 +137,7 @@ void autonomous(void) {
       intakeHoodMotor.spin(vex::forward, 0, vex::pct);
 
       gamer->turnToPosPIDSideFixed(90.0, 6.0, autonSelector.getAutonRedSide());
-      intakeMotor.spin(vex::forward, 100, vex::pct);
+      intakeMotor.spin(vex::forward, 50, vex::pct);
       intakeHoodMotor.spin(vex::forward, 100, vex::pct);
       gamer->fixed(24.0);
       setTime = vex::timer::system() + 1000;
@@ -146,13 +147,13 @@ void autonomous(void) {
 
       gamer->turnToPosPIDSideFixed(315.0, 6.0, autonSelector.getAutonRedSide());
       mogoMech.set(false);
-      gamer->fixed(16.971);
+      gamer->fixed(17.5);
       gamer->turnToPosPIDSideFixed(90.0, 6.0, autonSelector.getAutonRedSide());
-      gamer->fixed(-44.0);
+      gamer->fixed(-46.0);
       gamer->turnToPosPIDSideFixed(45.0, 6.0, autonSelector.getAutonRedSide());
       gamer->fixed(-16.971);
       mogoMech.set(true);
-      intakeMotor.spin(vex::forward, 100, vex::pct);
+      intakeMotor.spin(vex::forward, 50, vex::pct);
       intakeHoodMotor.spin(vex::forward, 100, vex::pct);
       gamer->turnToPosPIDSideFixed(270.0, 6.0, autonSelector.getAutonRedSide());
       gamer->fixed(24.0);
@@ -161,7 +162,7 @@ void autonomous(void) {
       intakeMotor.spin(vex::forward, 0, vex::pct);
       intakeHoodMotor.spin(vex::forward, 0, vex::pct);
       gamer->turnToPosPIDSideFixed(90.0, 6.0, autonSelector.getAutonRedSide());
-      gamer->fixed(-48.0);
+      gamer->fixed(40.0);
       break;
     }
 
@@ -233,6 +234,7 @@ void autonomous(void) {
 /*  You must modify the code to add your own robot specific commands here.   */
 /*---------------------------------------------------------------------------*/
 
+/*
 void usercontrol(void) {
   unsigned long frame = 0;
   mogoMechToggle.setEnabled();
@@ -284,13 +286,13 @@ void usercontrol(void) {
       wait(5, msec); // Sleep the task for a short amount of time to prevent wasted resources.
   }
 }
-
+*/
 //
 // Main will set up the competition functions and callbacks.
 //
 int main() {
   // Set up callbacks for autonomous and driver control periods.
-  Competition.autonomous(autonomous);
+  // Competition.autonomous(autonomous);
   Competition.drivercontrol(usercontrol);
 
   // Run the pre-autonomous function.

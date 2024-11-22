@@ -174,9 +174,15 @@ class OdomMovement {
         }
         void fixed(double inches) {
             bool negative = false;
+            // double locBias = this->odomMovementPID->getBias();
             if (inches < 0) {
                 negative = true;
+                // this->odomMovementPID->setBias(locBias > 0 ? -locBias : locBias);
             }
+            else {
+                // this->odomMovementPID->setBias(locBias < 0 ? -locBias : locBias);
+            }
+
             // get vector2s
             this->odom->pollAndUpdateOdom();
             Vector2 initialPos = this->odom->getPos();
@@ -197,20 +203,28 @@ class OdomMovement {
                 
                 double dif = this->odom->pythagoreanThrmBetweenTwoPoints(initialPos, currentPos);
                 //cont.Screen.print("%f, %f", this->odom->getX(), this->odom->getY());
-                // cont.Screen.print("%lf", dif);
+                cont.Screen.print("%lf", dif);
 
                 double movement;
                 if (negative) {
                     movement = this->odomMovementPID->calculate(inches + dif);
+                    if(movement < this->odomMovementPID->getBias()) {
+                        movement = this->odomMovementPID->getBias();
+                    }
                 }
                 else {
                     movement = this->odomMovementPID->calculate(inches - dif);
+                    if(movement > -this->odomMovementPID->getBias()) {
+                        movement = -this->odomMovementPID->getBias();
+                    }
                 }
+
                 this->robotMovement->robotBase->driveBothSides(movement);
                 //cont.Screen.print("%f", movement);
                 std::cout << movement << std::endl;
 
             } while(this->odomMovementPID->isPidFinished() == false);
+            this->robotMovement->robotBase->driveBothSides(0);
         }
 };
 
