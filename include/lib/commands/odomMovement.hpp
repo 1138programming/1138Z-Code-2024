@@ -221,7 +221,7 @@ class OdomMovement {
 
                 this->robotMovement->robotBase->driveBothSides(movement);
                 //cont.Screen.print("%f", movement);
-                std::cout << movement << std::endl;
+                std::cout << (inches+dif) << std::endl;
 
             } while(this->odomMovementPID->isPidFinished() == false);
             this->robotMovement->robotBase->driveBothSides(0);
