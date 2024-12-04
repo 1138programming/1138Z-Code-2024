@@ -4,21 +4,25 @@
 #include "vex.h"
 #include <vector>
 #include <string>
+#include <iostream>
 
 class AutonSelector {
     private:
         vex::controller* controller;
+        vex::brain* limitSwitchSel;
         std::vector<std::string> autonList;
         int currentAuton = 0;
         bool redAuton = true;
-        bool leftLastPressed, rightLastPressed, aLastPressed;
+        bool scrollLastPressed;
     public:
-        AutonSelector(vex::controller* controller) {
+        AutonSelector(vex::controller* controller, vex::brain* limitSwitchSelector) {
             this->controller = controller;
+            this->limitSwitchSel = limitSwitchSelector;
         }
 
         void add_auton(std::string auton) {
             this->autonList.push_back(auton);
+            std::cout << auton << std::endl;
         }
 
         void update() {
@@ -26,44 +30,31 @@ class AutonSelector {
                 return;
             }
             bool numChanged = false;
+            
+            bool scrollPressed = this->limitSwitchSel->Screen.pressing();
 
-            bool leftPressed = this->controller->ButtonLeft.pressing() || (this->controller->Axis4.position() > 90);
-            bool rightPressed = this->controller->ButtonRight.pressing() || (this->controller->Axis4.position() < -90);
-            bool aPressed = this->controller->ButtonA.pressing() || (this->controller->Axis3.position() > 90) || (this->controller->Axis3.position() < -90);
-
-            if (!leftLastPressed && leftPressed) {
-                this->currentAuton--;
-                numChanged = true;
-            }
-            if (!rightLastPressed && rightPressed) {
+            if (!this->scrollLastPressed && scrollPressed) {
                 this->currentAuton++;
                 numChanged = true;
             }
-            if(!aLastPressed && aPressed) {
-                this->redAuton = !redAuton;
-                numChanged = true;
-            }
 
-            if (this->currentAuton < 0) {
-                this->currentAuton = this->autonList.size()-1;
-            }
             if (this->currentAuton > this->autonList.size()-1) {
                 this->currentAuton = 0;
+                this->redAuton = !this->redAuton;
             }
 
             if (numChanged) {
                 updateScreen();
             }
 
-            this->leftLastPressed = leftPressed;
-            this->rightLastPressed = rightPressed;
-            this->aLastPressed = aPressed;
+            this->scrollLastPressed = scrollPressed;
         }
 
         void updateScreen() {
             this->controller->Screen.setCursor(0,0);
             this->controller->Screen.clearLine();
-            this->controller->Screen.print((this->redAuton ? "Red: " : "Blue: " +  this->autonList.at(this->currentAuton)).c_str());
+            std::string fullStr = (this->redAuton ? "Red: " : "Blue: ") + this->autonList.at(this->currentAuton);
+            this->controller->Screen.print(fullStr.c_str());
         }
 
         int getCurrentAuton() {

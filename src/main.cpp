@@ -37,7 +37,7 @@ vex::motor intakeMotor(KIntakeMotorPort, false); // rev so it starts the correct
 vex::motor intakeHoodMotor(KIntakeHoodMotorPort, true);
 Hang botHangPneumatics;
 
-AutonSelector autonSelector(mainController.getVexObject());
+AutonSelector autonSelector(mainController.getVexObject(), &botBrain);
 
 vex::inertial* internalGyro = new vex::inertial(KInertialSensorPort);
 Gyro* botGyro = new Gyro(internalGyro);
@@ -50,6 +50,9 @@ Toggleable intakeReversed;
 Toggleable mogoMechToggle;
 vex::digital_out mogoMech(botBrain.ThreeWirePort.A);
 
+bool preAutonReached = false;
+uint64_t preAutonTime = 0;
+
 /*---------------------------------------------------------------------------*/
 /*                          Pre-Autonomous Functions                         */
 /*                                                                           */
@@ -61,6 +64,13 @@ vex::digital_out mogoMech(botBrain.ThreeWirePort.A);
 /*---------------------------------------------------------------------------*/
 
 void pre_auton(void) {
+  botBrain.Screen.pressing();
+  //Tests if preauton is reach to make sure that we even reach preauton
+  preAutonReached = true;
+  preAutonTime = botBrain.Timer.systemHighResolution();
+  std::cout << preAutonTime << std::endl; //standard time reahced = 0.37 seconds 
+  std::cout << "  ^~~~~~~ That's the time ;DDDDDDDD" << std::endl;
+
   robotBase.resetAllEncoders();
   botGyro->resetGyroWithWait();
 
@@ -71,15 +81,20 @@ void pre_auton(void) {
   autonSelector.add_auton("2 Mogo +2");
   autonSelector.add_auton("testing");
 
-  // autonSelector.updateScreen();
+  autonSelector.updateScreen();
   
   while(!Competition.isEnabled()) {
     autonSelector.update();
     vex::wait(5, vex::msec);
   }
 
+  std::cout << botBrain.Timer.systemHighResolution() << std::endl; //standard time reahced = 0.37 seconds 
+  std::cout << "  ^~~~~~~ That's the (end) time ;DDDDDDDD" << std::endl;
+
   // All activities that occur before the competition starts
   // Example: clearing encoders, setting servo positions, ...
+  // !! Reports of PreAuton not activating. Items need to be reset. !!
+  // solutions so far: Failsafe in auton (takes 2 sec), 
   //intakeMotor.setStopping(vex::hold);
 }
 
@@ -94,15 +109,22 @@ void pre_auton(void) {
 /*---------------------------------------------------------------------------*/
 
 void autonomous(void) {
-  robotBase.resetAllEncoders();
-  botGyro->resetGyroWithWait();
+  //pre auton failsafe
+  if (!preAutonReached) {
+    robotBase.resetAllEncoders();
+    botGyro->resetGyroWithWait();
+  }
+  else {
+    botBrain.Screen.printAt(0,0,"%lu", preAutonTime);
+  }
+  
   uint32_t setTime;
   movementPID.setBias(10.0);
   // int currentAuton = autonSelector.getCurrentAuton();
   // bool redAuton = autonSelector.getAutonRedSide();
 
   //temporary for testing specific auton
-  autonSelector.setAuton(5);
+  autonSelector.setAuton(6);
   autonSelector.setAutonRedSide(true);
 
   // 0 = nothing
@@ -114,6 +136,7 @@ void autonomous(void) {
   // 6 = left 4 + touching
 
   switch(autonSelector.getCurrentAuton()) {
+
     //do nothing
     case 0: {
       break;
@@ -264,7 +287,7 @@ void autonomous(void) {
     }
     case 6: {
       mogoMech.set(false);
-      gamer->fixed(-35.0);
+      gamer->fixedSlow(-35.0, 60);
       mogoMech.set(true);
       // gamer->fixed(-2.0);
       intakeMotor.spin(vex::forward, 50, vex::pct);

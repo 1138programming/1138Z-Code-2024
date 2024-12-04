@@ -29,7 +29,7 @@ const bool KFrontLeftMotorRev = true;
 // intake
 const int KIntakeMotorPort = vex::PORT10;
 const int KIntakeHoodMotorPort = vex::PORT1;
-const float KIntakeMotorSpeedMult = 0.5;
+const float KIntakeMotorSpeedMult = 0.6;
 const float KIntakeHoodMotorSpeedMult = 1.0;
 
 // odom

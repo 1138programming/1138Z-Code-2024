@@ -171,6 +171,7 @@ class OdomMovement {
                 this->robotMovement->robotBase->driveBothSides(negative ? speedPct : -speedPct);
 
             } while(movement > 1 || movement < -1);
+            this->robotMovement->robotBase->driveBothSides(0);
         }
         void fixed(double inches) {
             bool negative = false;
