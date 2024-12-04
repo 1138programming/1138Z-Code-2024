@@ -110,7 +110,7 @@ void autonomous(void) {
   // 2 = left to right AWP +0
   // 3 = left 2 + touching
   // 4 = right to left AWP + 0
-  // 5 = right 2 + touching
+  // 5 = right 2 + touching (slot 4)
   // 6 = left 4 + touching
 
   switch(autonSelector.getCurrentAuton()) {
