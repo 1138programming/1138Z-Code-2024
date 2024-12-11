@@ -10,6 +10,6 @@ typedef union {
         uint16_t versionPatch;
     } version;
     uint64_t versionNum;
-};
+} VersioningUnion;
 
 #endif
