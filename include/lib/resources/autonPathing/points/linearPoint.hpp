@@ -9,8 +9,11 @@ class LinearPoint : public Point {
         bool isBackwards;
 
         LinearPoint(DataPointType pointType) : Point(pointType) {}
-        LinearPoint(DataPointType pointType, std::vector<char>& data, int index) : Point(pointType) {
-            this->readToClass(data, index);
+        /***
+         * @warning PLEASE MAKE SURE THIS DOES WHAT YOU EXPECT. It auto-increments index. Manually use the readToClass(std::vector<char>& vec, int index) function if you don't want this behaviour.
+         */
+        LinearPoint(DataPointType pointType, std::vector<char>& data, int& index) : Point(pointType) {
+            index += this->readToClass(data, index);
         }
 
         virtual int readToClass(std::vector<char>& vec, int index) {

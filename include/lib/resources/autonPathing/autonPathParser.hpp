@@ -3,7 +3,12 @@
 
 #include "../commands/odomMovement.hpp"
 #include "autonVersioningUnion.hpp"
+#include "pointArray.hpp"
 #include "dataPointType.hpp"
+#include "points/point.hpp"
+    #include "points/pointInitial.hpp"
+    #include "points/linearPoint.hpp"
+    #include "points/endPoint.hpp"
 
 #include <vector>
 #include <iostream>
@@ -17,6 +22,7 @@ private:
     std::vector<char> autonPathData;
     VersioningUnion dataVer;
     OdomMovement* odomMovement;
+    PointArray pathPoints;
 
     void checkVersion() {
         VersioningUnion parserCompatVer;
@@ -39,8 +45,36 @@ private:
 
         while(currentOffset < autonPathData.size()) {
             // gets next data point type
+            // the constructors auto-increment currentOffset (I know it's terrible & idc)
             switch(*((DataPointType*)(autonPathData.data()+currentOffset))) {
                 
+                // this is weird but needs to be done after the switch statement condition starts
+                currentOffset += sizeof(DataPointType);
+                
+                case DataPointType_Settings: {
+                    std::cout << "Settings are not implemented... path data probably incorrect." << std::endl;
+                }
+                break;
+
+                case DataPointType_Initial: {
+                    this->pathPoints.add(new PointInitial(DataPointType_Initial, autonPathData, currentOffset));
+                }
+                break;
+
+                case DataPointType_LinearPoint: {
+                    this->pathPoints.add(new LinearPoint(DataPointType_LinearPoint, autonPathData, currentOffset));
+                }
+                break;
+
+                case DataPointType_Event: {
+                    std::cout << "Event not implemented. Confirm path data is correct or update parser version." << std::endl;
+                }
+                break;
+
+                case DataPointType_EndPoint: {
+                    this->pathPoints.add(new EndPoint(DataPointType_EndPoint, autonPathData, currentOffset));
+                }
+                break;
             }
         }
     }
@@ -52,6 +86,7 @@ public:
         for(int i = 0; i < dataSize; i++) {
             this->autonPathData.push_back(autonPathData[i]);
         }
+        init();
     }
 
     void update() {
