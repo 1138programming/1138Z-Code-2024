@@ -23,6 +23,12 @@ class PointArray {
         int getSize() {
             return this->pointArr.size();
         }
+
+        ~PointArray() {
+            for (int i = 0; i < this->getSize(); i++) {
+                delete this->at(i);
+            }
+        }
 };
 
 #endif

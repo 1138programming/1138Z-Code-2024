@@ -32,6 +32,9 @@ class Point {
                 index += sizeof(float);
             return index;
         }
+
+        // needed to make child class pointers work
+        virtual ~Point() {}
 };
 
 #endif

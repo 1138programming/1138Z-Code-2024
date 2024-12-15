@@ -30,6 +30,8 @@ class PointInitial : public Point {
                 index += sizeof(float);
             return index;
         }
+
+        ~PointInitial() {}
 };
 
 #endif

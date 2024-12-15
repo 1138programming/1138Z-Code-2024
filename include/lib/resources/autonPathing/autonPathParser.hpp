@@ -23,6 +23,7 @@ private:
     VersioningUnion dataVer;
     OdomMovement* odomMovement;
     PointArray pathPoints;
+    int currentPointNum = 0;
 
     void checkVersion() {
         VersioningUnion parserCompatVer;
@@ -52,7 +53,7 @@ private:
                 currentOffset += sizeof(DataPointType);
                 
                 case DataPointType_Settings: {
-                    std::cout << "Settings are not implemented... path data probably incorrect." << std::endl;
+                    std::cout << "Settings are not implemented. Confirm path data is correct or update parser version." << std::endl;
                 }
                 break;
 
@@ -90,7 +91,7 @@ public:
     }
 
     void update() {
-
+        Point* curr = pathPoints.at(this->currentPointNum);
     }
 };
 

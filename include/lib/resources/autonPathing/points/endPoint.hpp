@@ -26,6 +26,8 @@ class EndPoint : public Point {
                 index += sizeof(float);
             return index;
         }
+
+        ~EndPoint() {}
 };
 
 #endif

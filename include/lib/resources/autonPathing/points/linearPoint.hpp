@@ -26,6 +26,8 @@ class LinearPoint : public Point {
                 index += sizeof(float);
             return index;
         }
+
+        ~LinearPoint() {}
 };
 
 #endif
