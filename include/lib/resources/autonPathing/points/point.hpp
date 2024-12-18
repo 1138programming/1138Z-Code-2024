@@ -33,6 +33,13 @@ class Point {
             return index;
         }
 
+        DataPointType getPointType() {
+            return this->pointType;
+        }
+        Vector2F getPointPlacement() {
+            return this->pointPlacement;
+        }
+
         // needed to make child class pointers work
         virtual ~Point() {}
 };

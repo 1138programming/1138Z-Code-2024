@@ -25,6 +25,10 @@ private:
     PointArray pathPoints;
     int currentPointNum = 0;
 
+    bool isBlueSide;
+    float angleOffset = 0.0f;
+    Vector2F botPlacement;
+
     void checkVersion() {
         VersioningUnion parserCompatVer;
             parserCompatVer.version.versionMajor = PARSER_VER_MAJOR_COMPAT;
@@ -92,6 +96,29 @@ public:
 
     void update() {
         Point* curr = pathPoints.at(this->currentPointNum);
+
+        switch (curr->getPointType()) {
+            case DataPointType_Initial: {
+                PointInitial* currFixed = (PointInitial*)curr;
+
+                this->isBlueSide = currFixed->isBlue;
+                this->angleOffset = currFixed->angle;
+                this->botPlacement = currFixed->getPointPlacement();
+            }
+            break;
+
+            case DataPointType_LinearPoint: {
+                LinearPoint* currFixed = (LinearPoint*)curr;
+
+                
+            }
+            break;
+
+            case DataPointType_EndPoint: {
+                EndPoint* currFixed = (EndPoint*)curr;
+            }
+            break;
+        }
     }
 };
 
