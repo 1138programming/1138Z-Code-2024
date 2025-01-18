@@ -34,7 +34,7 @@ Movement botMovement(&robotBase, true, true);
 
 Controller mainController(vex::controllerType::primary);
 vex::motor intakeMotor(KIntakeMotorPort, false); // rev so it starts the correct dir
-vex::motor intakeHoodMotor(KIntakeHoodMotorPort, true);
+vex::motor wallStakeMotor(KWallStakeMotorPort, true);
 Hang botHangPneumatics;
 
 AutonSelector autonSelector(mainController.getVexObject(), &botBrain);
@@ -155,20 +155,16 @@ void autonomous(void) {
       mogoMech.set(true);
       // gamer->fixed(-2.0);
       intakeMotor.spin(vex::forward, 50, vex::pct);
-      intakeHoodMotor.spin(vex::forward, 100, vex::pct);
       setTime = vex::timer::system() + 500;
       while (vex::timer::system() <= setTime) {vex::wait(5, vex::msec);}; // wait for score
       intakeMotor.spin(vex::forward, 0, vex::pct);
-      intakeHoodMotor.spin(vex::forward, 0, vex::pct);
 
       gamer->turnToPosPIDSideFixed(90.0, 6.0, autonSelector.getAutonRedSide());
       intakeMotor.spin(vex::forward, 50, vex::pct);
-      intakeHoodMotor.spin(vex::forward, 100, vex::pct);
       gamer->fixed(24.0);
       setTime = vex::timer::system() + 1000;
       while (vex::timer::system() <= setTime) {vex::wait(5, vex::msec);}; // wait for score
       intakeMotor.spin(vex::forward, 0, vex::pct);
-      intakeHoodMotor.spin(vex::forward, 0, vex::pct);
 
       gamer->turnToPosPIDSideFixed(315.0, 6.0, autonSelector.getAutonRedSide());
       mogoMech.set(false);
@@ -179,13 +175,11 @@ void autonomous(void) {
       gamer->fixed(-16.971);
       mogoMech.set(true);
       intakeMotor.spin(vex::forward, 50, vex::pct);
-      intakeHoodMotor.spin(vex::forward, 100, vex::pct);
       gamer->turnToPosPIDSideFixed(270.0, 6.0, autonSelector.getAutonRedSide());
       gamer->fixed(24.0);
       setTime = vex::timer::system() + 1000;
       while (vex::timer::system() <= setTime) {vex::wait(5, vex::msec);}; // wait for score
       intakeMotor.spin(vex::forward, 0, vex::pct);
-      intakeHoodMotor.spin(vex::forward, 0, vex::pct);
       gamer->turnToPosPIDSideFixed(90.0, 6.0, autonSelector.getAutonRedSide());
       gamer->fixed(40.0);
       break;
@@ -198,20 +192,16 @@ void autonomous(void) {
       mogoMech.set(true);
       // gamer->fixed(-2.0);
       intakeMotor.spin(vex::forward, 50, vex::pct);
-      intakeHoodMotor.spin(vex::forward, 100, vex::pct);
       setTime = vex::timer::system() + 500;
       while (vex::timer::system() <= setTime) {vex::wait(5, vex::msec);}; // wait for score
       intakeMotor.spin(vex::forward, 0, vex::pct);
-      intakeHoodMotor.spin(vex::forward, 0, vex::pct);
 
       gamer->turnToPosPIDSideFixed(90.0, 6.0, autonSelector.getAutonRedSide());
       intakeMotor.spin(vex::forward, 50, vex::pct);
-      intakeHoodMotor.spin(vex::forward, 100, vex::pct);
       gamer->fixed(24.0);
       setTime = vex::timer::system() + 1000;
       while (vex::timer::system() <= setTime) {vex::wait(5, vex::msec);}; // wait for score
       intakeMotor.spin(vex::forward, 0, vex::pct);
-      intakeHoodMotor.spin(vex::forward, 0, vex::pct);
 
       gamer->turnToPosPIDSideFixed(270.0, 6.0, autonSelector.getAutonRedSide());
       gamer->fixed(40.0);
@@ -225,20 +215,16 @@ void autonomous(void) {
       mogoMech.set(true);
       // gamer->fixed(-2.0);
       intakeMotor.spin(vex::forward, 50, vex::pct);
-      intakeHoodMotor.spin(vex::forward, 100, vex::pct);
       setTime = vex::timer::system() + 500;
       while (vex::timer::system() <= setTime) {vex::wait(5, vex::msec);}; // wait for score
       intakeMotor.spin(vex::forward, 0, vex::pct);
-      intakeHoodMotor.spin(vex::forward, 0, vex::pct);
 
       gamer->turnToPosPIDSideFixed(270.0, 6.0, autonSelector.getAutonRedSide());
       intakeMotor.spin(vex::forward, 50, vex::pct);
-      intakeHoodMotor.spin(vex::forward, 100, vex::pct);
       gamer->fixed(24.0);
       setTime = vex::timer::system() + 1000;
       while (vex::timer::system() <= setTime) {vex::wait(5, vex::msec);}; // wait for score
       intakeMotor.spin(vex::forward, 0, vex::pct);
-      intakeHoodMotor.spin(vex::forward, 0, vex::pct);
 
       gamer->turnToPosPIDSideFixed(45.0, 6.0, autonSelector.getAutonRedSide());
       mogoMech.set(false);
@@ -249,13 +235,11 @@ void autonomous(void) {
       gamer->fixed(-16.971);
       mogoMech.set(true);
       intakeMotor.spin(vex::forward, 50, vex::pct);
-      intakeHoodMotor.spin(vex::forward, 100, vex::pct);
       gamer->turnToPosPIDSideFixed(90.0, 6.0, autonSelector.getAutonRedSide());
       gamer->fixed(24.0);
       setTime = vex::timer::system() + 1000;
       while (vex::timer::system() <= setTime) {vex::wait(5, vex::msec);}; // wait for score
       intakeMotor.spin(vex::forward, 0, vex::pct);
-      intakeHoodMotor.spin(vex::forward, 0, vex::pct);
       gamer->turnToPosPIDSideFixed(270.0, 6.0, autonSelector.getAutonRedSide());
       gamer->fixed(40.0);
       break;
@@ -267,20 +251,16 @@ void autonomous(void) {
       mogoMech.set(true);
       // gamer->fixed(-2.0);
       intakeMotor.spin(vex::forward, 50, vex::pct);
-      intakeHoodMotor.spin(vex::forward, 100, vex::pct);
       setTime = vex::timer::system() + 500;
       while (vex::timer::system() <= setTime) {vex::wait(5, vex::msec);}; // wait for score
       intakeMotor.spin(vex::forward, 0, vex::pct);
-      intakeHoodMotor.spin(vex::forward, 0, vex::pct);
 
       gamer->turnToPosPIDSideFixed(270.0, 6.0, autonSelector.getAutonRedSide());
       intakeMotor.spin(vex::forward, 50, vex::pct);
-      intakeHoodMotor.spin(vex::forward, 100, vex::pct);
       gamer->fixed(24.0);
       setTime = vex::timer::system() + 2000;
       while (vex::timer::system() <= setTime) {vex::wait(5, vex::msec);}; // wait for score
       intakeMotor.spin(vex::forward, 0, vex::pct);
-      intakeHoodMotor.spin(vex::forward, 0, vex::pct);
       gamer->turnToPosPIDSideFixed(90.0, 6.0, autonSelector.getAutonRedSide());
       gamer->fixed(40.0);
       break;
@@ -291,15 +271,12 @@ void autonomous(void) {
       mogoMech.set(true);
       // gamer->fixed(-2.0);
       intakeMotor.spin(vex::forward, 50, vex::pct);
-      intakeHoodMotor.spin(vex::forward, 100, vex::pct);
       setTime = vex::timer::system() + 500;
       while (vex::timer::system() <= setTime) {vex::wait(5, vex::msec);}; // wait for score
       intakeMotor.spin(vex::forward, 0, vex::pct);
-      intakeHoodMotor.spin(vex::forward, 0, vex::pct);
 
       gamer->turnToPosPIDSideFixed(90.00, 6.0, autonSelector.getAutonRedSide());
       intakeMotor.spin(vex::forward, 50, vex::pct);
-      intakeHoodMotor.spin(vex::forward, 100, vex::pct);
       gamer->fixed(30);
       setTime = vex::timer::system() + 1000;
       while (vex::timer::system() <= setTime) {vex::wait(5, vex::msec);}; // wait for score
@@ -308,12 +285,10 @@ void autonomous(void) {
       setTime = vex::timer::system() + 1000;
       while (vex::timer::system() <= setTime) {vex::wait(5, vex::msec);}; // wait for score
       intakeMotor.spin(vex::forward, 0, vex::pct);
-      intakeHoodMotor.spin(vex::forward, 0, vex::pct);
       gamer->fixed(-15.8);
 
       gamer->turnToPosPIDSideFixed(189.69, 6.0, autonSelector.getAutonRedSide());
       intakeMotor.spin(vex::forward, 50, vex::pct);
-      intakeHoodMotor.spin(vex::forward, 100, vex::pct);
       gamer->fixed(15.8);
       setTime = vex::timer::system() + 1000;
       while (vex::timer::system() <= setTime) {vex::wait(5, vex::msec);}; // wait for score
@@ -321,7 +296,6 @@ void autonomous(void) {
 
       gamer->turnToPosPIDSideFixed(270.0, 6.0, autonSelector.getAutonRedSide());
       intakeMotor.spin(vex::forward, 0, vex::pct);
-      intakeHoodMotor.spin(vex::forward, 0, vex::pct);
       gamer->fixed(40.0);
       break;
     }
@@ -364,11 +338,9 @@ void usercontrol(void) {
 
       if (intakeEnabled.isEnabled()) {
         intakeMotor.spin(vex::forward, (intakeReversed.isEnabled() ? -(KIntakeMotorSpeedMult * 100) : (KIntakeMotorSpeedMult * 100)), vex::pct); // spin both correct dir
-        intakeHoodMotor.spin(vex::forward, (intakeReversed.isEnabled() ? -(KIntakeHoodMotorSpeedMult * 100) : (KIntakeHoodMotorSpeedMult * 100)), vex::pct);
       }
       else {
         intakeMotor.spin(vex::forward, 0, vex::pct);
-        intakeHoodMotor.spin(vex::forward, 0, vex::pct);
       }
 
       mogoMech.set(mogoMechToggle.isEnabled());
