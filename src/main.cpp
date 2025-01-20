@@ -16,6 +16,7 @@
 #include "lib/resources/holdable.hpp"
 #include "impl/bot/intake.hpp"// file not used
 #include "impl/bot/hang.hpp"
+#include "impl/bot/ladyBrown.hpp"
 #include "lib/commands/odomMovement.hpp"
 #include "impl/bot/autonSelector.hpp"
 
@@ -34,7 +35,10 @@ Movement botMovement(&robotBase, true, true);
 
 Controller mainController(vex::controllerType::primary);
 vex::motor intakeMotor(KIntakeMotorPort, false); // rev so it starts the correct dir
-vex::motor wallStakeMotor(KWallStakeMotorPort, true);
+vex::motor ladyBrownMotor(KWallStakeMotorPort, false);
+vex::limit limitSwitch(botBrain.ThreeWirePort.B);
+vex::rotation rotationSensor(KRotationSensorPort);
+LadyBrown ladyBrown(&ladyBrownMotor,&mainController, &rotationSensor, &limitSwitch);
 Hang botHangPneumatics;
 
 AutonSelector autonSelector(mainController.getVexObject(), &botBrain);
