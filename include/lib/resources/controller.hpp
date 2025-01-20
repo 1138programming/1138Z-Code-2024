@@ -8,6 +8,10 @@
 class Controller {
     private:
         vex::controller* internalController;
+
+        static void testFunctionCallback(void* testArg) {
+
+        }
     public:
         Controller(vex::controllerType type) {
             this->internalController = new vex::controller(type);

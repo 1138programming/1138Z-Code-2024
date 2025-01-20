@@ -5,7 +5,9 @@ enum LadyBrownCycle {
     START,
     DOWN,
     LOADING,
-    OUT
+    OUT,
+    RESETTING,
+    RESETVAL
 };
 
 #endif

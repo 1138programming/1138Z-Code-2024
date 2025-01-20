@@ -128,7 +128,7 @@ void autonomous(void) {
   // bool redAuton = autonSelector.getAutonRedSide();
 
   //temporary for testing specific auton
-  autonSelector.setAuton(6);
+  autonSelector.setAuton(1);
   autonSelector.setAutonRedSide(true);
 
   // 0 = nothing

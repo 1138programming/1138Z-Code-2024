@@ -15,7 +15,7 @@ class LadyBrown {
         LadyBrownCycle cycle = START;
         bool resetting = false;
     public:
-        LadyBrown(vex::motor* armMotor, Controller* vexControoller, vex::rotation* rotationSensor, vex::limit* limitSwitch) {
+        LadyBrown(vex::motor* armMotor, Controller* vexController, vex::rotation* rotationSensor, vex::limit* limitSwitch) {
             this->vexController = vexController;
             this->armMotor = armMotor;
             this->armMotor->setStopping(vex::hold);
@@ -30,20 +30,12 @@ class LadyBrown {
             rotationSensor->resetPosition();
         }
         void cycleLadyBrown() {
-            switch(cycle) {
-                case START:
-                cycle = DOWN;
-                break;
-                case DOWN:
-                cycle = LOADING;
-                break;
-                case LOADING:
-                cycle = OUT;
-                break;
-                case OUT:
-                cycle = DOWN;
-                break;
+            int cycleNum = static_cast<int>(this->cycle);
+            cycleNum++;
+            if (cycleNum >= RESETVAL) {
+                cycleNum = 1;
             }
+            this->cycle = static_cast<LadyBrownCycle>(cycleNum);
         }
         void run() {
             //down (cycle #1)
