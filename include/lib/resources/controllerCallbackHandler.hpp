@@ -3,11 +3,6 @@
 
 #include "controller.hpp"
 
-class ControllerCallbackHandler {
-    private:
-        Controller* controller;
-    public:
-        
-};
+
 
 #endif

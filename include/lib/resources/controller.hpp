@@ -120,4 +120,18 @@ class Controller {
         }
 };
 
+class ControllerCallbackHandler {
+    private:
+        Controller* controller;
+        void(*func)(Controller*);
+    public:
+        ControllerCallbackHandler(Controller* parent, void(*callback)(Controller*)) {
+            this->controller = parent;
+            this->func = callback;
+        }
+        void operator()() const {
+            this->func(this->controller);
+        }
+};
+
 #endif
