@@ -34,7 +34,7 @@ PID movementPID(0.0, 3.4, 0.0, 0.0, 100, -100, 0.5);
 Movement botMovement(&robotBase, true, true);
 
 Controller mainController(vex::controllerType::primary);
-vex::motor intakeMotor(KIntakeMotorPort, false); // rev so it starts the correct dir
+vex::motor intakeMotor(KIntakeMotorPort, true); // rev so it starts the correct dir
 vex::motor ladyBrownMotor(KWallStakeMotorPort, false);
 vex::limit limitSwitch(botBrain.ThreeWirePort.B);
 vex::rotation rotationSensor(KRotationSensorPort);
@@ -128,7 +128,7 @@ void autonomous(void) {
   // bool redAuton = autonSelector.getAutonRedSide();
 
   //temporary for testing specific auton
-  autonSelector.setAuton(1);
+  autonSelector.setAuton(4);
   autonSelector.setAutonRedSide(true);
 
   // 0 = nothing
@@ -301,6 +301,15 @@ void autonomous(void) {
       gamer->turnToPosPIDSideFixed(270.0, 6.0, autonSelector.getAutonRedSide());
       intakeMotor.spin(vex::forward, 0, vex::pct);
       gamer->fixed(40.0);
+      break;
+    }
+    // 
+    case 7: {
+      gamer->fixed(fieldTileLenIn);
+      gamer->turnToPosPID(294.294, 6.0);
+      
+      gamer->fixed(39.498);
+
       break;
     }
   }

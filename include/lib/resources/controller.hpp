@@ -9,8 +9,18 @@ class Controller {
     private:
         vex::controller* internalController;
 
-        static void testFunctionCallback(void* testArg) {
-
+        template <ControllerButton T>
+        static void testFunctionCallback() {
+            ControllerButton btn = T;
+            switch (T)
+            {
+            case 0:
+                /* code */
+                break;
+            
+            default:
+                break;
+            }
         }
     public:
         Controller(vex::controllerType type) {

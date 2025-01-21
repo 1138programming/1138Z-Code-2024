@@ -26,6 +26,11 @@ const bool KBackLeftMotorRev = false;
 const bool KMiddleLeftMotorRev = false;
 const bool KFrontLeftMotorRev = false;
 
+const double botLengthIn = 15.5;
+const double botWidthIn = 14.5;
+
+const double fieldTileLenIn = 24.0;
+
 // intake
 const int KIntakeMotorPort = vex::PORT1;
 const float KIntakeMotorSpeedMult = 1.0;
@@ -35,7 +40,7 @@ const int KWallStakeMotorPort = vex::PORT12;
 const int KRotationSensorPort = -1; //TBD
 
 // odom
-const int KInertialSensorPort = vex::PORT5;
+const int KInertialSensorPort = vex::PORT20;
 const float KOdomWheelSize = 2.7;
 const double kInchesFixMult = 0.018420820508516; // TODO: FIX THISS!!!!!!
 //const float kInchesFixMult = 0.0221;
