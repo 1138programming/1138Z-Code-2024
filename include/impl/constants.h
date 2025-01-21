@@ -37,7 +37,7 @@ const float KIntakeMotorSpeedMult = 1.0;
 
 //LadyBrown
 const int KWallStakeMotorPort = vex::PORT12;
-const int KRotationSensorPort = -1; //TBD
+const int KRotationSensorPort = vex::PORT5;
 
 // odom
 const int KInertialSensorPort = vex::PORT20;

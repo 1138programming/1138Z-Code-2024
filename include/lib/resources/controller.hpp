@@ -5,27 +5,32 @@
 #include "controller_axis.hpp"
 #include "controller_button.hpp"
 
+#include <unordered_map>
+
 class Controller {
     private:
         vex::controller* internalController;
+        
+        std::unordered_map<ControllerButton, bool> buttonMap;
 
-        template <ControllerButton T>
-        static void testFunctionCallback() {
-            ControllerButton btn = T;
-            switch (T)
-            {
-            case 0:
-                /* code */
-                break;
+        // template<ControllerButton T>  void buttonPressedCallback();
+        static void buttonPressedCallback(Controller* ctrl) {
             
-            default:
-                break;
+        }
+
+        void populateMap() {
+            for(int i = 0; i <= static_cast<int>(BUTTON_R2); i++) {
+                buttonMap[static_cast<ControllerButton>(i)] = false;
             }
         }
+
     public:
         Controller(vex::controllerType type) {
             this->internalController = new vex::controller(type);
+            this->internalController->ButtonA.pressed((void(*)())(&this->buttonPressedCallback));
+            populateMap();
         }
+
         /**
          * @brief Allows users to do whatever they want with the internal controller
         */

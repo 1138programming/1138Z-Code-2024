@@ -14,14 +14,12 @@ class LadyBrown {
         vex::rotation* rotationSensor;
         LadyBrownCycle cycle = START;
         bool resetting = false;
-    public:
-        LadyBrown(vex::motor* armMotor, Controller* vexController, vex::rotation* rotationSensor, vex::limit* limitSwitch) {
-            this->vexController = vexController;
-            this->armMotor = armMotor;
-            this->armMotor->setStopping(vex::hold);
-            this->rotationSensor = rotationSensor;
-            this->limitSwitch = limitSwitch;
-        }
+        bool xLastPressed = false;
+        bool aLastPressed = false;
+        bool upLastPressed = false;
+        bool leftLastPressed = false;
+        bool downLastPressed = false;
+        
         void normalizeArmPosition() {
             while(!limitSwitch->PRESSED) {
                 this->armMotor->spin(vex::forward, 20, vex::pct);
@@ -37,50 +35,97 @@ class LadyBrown {
             }
             this->cycle = static_cast<LadyBrownCycle>(cycleNum);
         }
+        bool checkLastPressed(ControllerButton button) {
+            switch(button) {
+                case BUTTON_X:
+                    if(xLastPressed) return false;
+                    xLastPressed = true;
+                break;
+                case BUTTON_A:
+                    if(aLastPressed) return false;
+                    aLastPressed = true;
+                break;
+                case DPAD_UP:
+                    if(upLastPressed) return false;
+                    upLastPressed = true;
+                break;
+                case DPAD_LEFT:
+                    if(leftLastPressed) return false;
+                    leftLastPressed = true;
+                break;
+                case DPAD_DOWN:
+                    if(downLastPressed) return false;
+                    downLastPressed = true;
+                break;
+            }
+            return true;
+        }
+    public:
+        LadyBrown(vex::motor* armMotor, Controller* vexController, vex::rotation* rotationSensor, vex::limit* limitSwitch) {
+            this->vexController = vexController;
+            this->armMotor = armMotor;
+            this->armMotor->setStopping(vex::hold);
+            this->rotationSensor = rotationSensor;
+            this->limitSwitch = limitSwitch;
+
+            this->vexController->getVexObject()->ButtonA.released();
+        }
         void run() {
             //down (cycle #1)
             if (this->vexController->getVexObject()->ButtonX.PRESSED && cycle == OUT) {
-                this->armMotor->spinToPosition(0, vex::degrees, false);
+                if(checkLastPressed(ControllerButton::BUTTON_X)){
+                this->armMotor->spinToPosition(0, vex::degrees);
                 cycleLadyBrown();
+                }
             }
             //loading (cycle #2)
             else if (this->vexController->getVexObject()->ButtonX.PRESSED && cycle == DOWN) {
-                this->armMotor->spinToPosition(-60, vex::degrees, false);
-                cycleLadyBrown();
+                if(checkLastPressed(ControllerButton::BUTTON_X)){
+                    this->armMotor->spinToPosition(-60, vex::degrees, false);
+                    cycleLadyBrown();
+                }
             }
             //wall stake (cycle #3)
             else if (this->vexController->getVexObject()->ButtonX.PRESSED && cycle == LOADING) {
-                this->armMotor->spinToPosition(-300, vex::degrees, false);
-                cycleLadyBrown();
-                
+                if(checkLastPressed(ControllerButton::BUTTON_X)){
+                    this->armMotor->spinToPosition(-300, vex::degrees, false);
+                    cycleLadyBrown();
+                }
             }
             //alliance stake (separate button)
             else if (this->vexController->getVexObject()->ButtonUp.PRESSED) {
-                this->armMotor->spinToPosition(-400, vex::degrees, false);
-                cycle = OUT;
+                if(checkLastPressed(ControllerButton::DPAD_UP)){
+                    this->armMotor->spinToPosition(-400, vex::degrees, false);
+                    cycle = OUT;
+                }
             }
             //manual loading
             else if (this->vexController->getVexObject()->ButtonA.PRESSED) {
-                this->armMotor->spinToPosition(-60, vex::degrees, false);
-                cycle = LOADING;
+                if(checkLastPressed(ControllerButton::BUTTON_A)){
+                    this->armMotor->spinToPosition(-60, vex::degrees, false);
+                    cycle = LOADING;
+                }
             }
             //manual scoring
             else if (this->vexController->getVexObject()->ButtonA.PRESSED) {
-                this->armMotor->spin(vex::forward, 40, vex::pct);
-                cycle = DOWN;
+                if(checkLastPressed(ControllerButton::BUTTON_X)){
+                    this->armMotor->spin(vex::forward, 40, vex::pct);
+                    cycle = DOWN;
+                }
             }
             //manual down
             else if (this->vexController->getVexObject()->ButtonA.PRESSED) {
-                this->armMotor->spin(vex::forward, 40, vex::pct);
-                cycle = DOWN;
+                if(checkLastPressed(ControllerButton::BUTTON_X)){
+                    this->armMotor->spin(vex::forward, 40, vex::pct);
+                    cycle = DOWN;
+                }
             }
-            //reset
-            else if (this->vexController->getVexObject()->ButtonA.PRESSED) {
-                this->armMotor->spin(vex::forward, 40, vex::pct);
-                cycle = DOWN;
-            }
-            else {
-                this->armMotor->spin(vex::forward, 0, vex::pct);
+            //manual reset
+            else if (this->vexController->getVexObject()->ButtonDown.PRESSED) {
+                if(checkLastPressed(ControllerButton::DPAD_DOWN)){
+                    this->armMotor->spin(vex::forward, 40, vex::pct);
+                    cycle = DOWN;
+                }
             }
         }
 };
