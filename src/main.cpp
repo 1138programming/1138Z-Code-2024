@@ -349,6 +349,8 @@ void usercontrol(void) {
 
       mogoMech.set(mogoMechToggle.isEnabled());
 
+      ladyBrown.run();
+
       intakeEnabled.update(mainController.getButton(BUTTON_R1));
       intakeReversed.update(mainController.getButton(BUTTON_R2));
 
