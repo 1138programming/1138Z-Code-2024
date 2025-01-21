@@ -4,17 +4,20 @@
 #include "vex.h"
 #include "controller_axis.hpp"
 #include "controller_button.hpp"
+#include "controllerCallbackHandler.hpp"
 
 #include <unordered_map>
 
 class Controller {
     private:
+        friend class ControllerCallbackHandler;
+            std::vector<ControllerCallbackHandler> pressedHandlers, releasedHandlers;
+
         vex::controller* internalController;
         
         std::unordered_map<ControllerButton, bool> buttonMap;
 
-        // template<ControllerButton T>  void buttonPressedCallback();
-        static void buttonPressedCallback(Controller* ctrl) {
+        template<ControllerButton T> void buttonPressedCallback(Controller* ctrl) {
             
         }
 
@@ -27,7 +30,6 @@ class Controller {
     public:
         Controller(vex::controllerType type) {
             this->internalController = new vex::controller(type);
-            this->internalController->ButtonA.pressed((void(*)())(&this->buttonPressedCallback));
             populateMap();
         }
 
@@ -104,6 +106,17 @@ class Controller {
                 default:
                     return false;
             }    
+        }
+        /***
+         * @details returns true one time after the controller has benn pressed
+         */
+        bool isPressed(ControllerButton button) {
+            bool val = this->buttonMap[button];
+
+            if (val) {
+                this->buttonMap[button] = false;
+            }
+            return val;
         }
 };
 
