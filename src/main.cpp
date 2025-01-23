@@ -312,6 +312,26 @@ void autonomous(void) {
 
       break;
     }
+    case 8: {
+      // setup...
+      intaleMotor.spin(vex::forward, 100.0, vex::pct);
+      gamer->turnToPosPID(270.0, 6.0);
+      gamer->fixed(-fieldTileLenIn);
+      
+      gamer->turnToPosPID(0.0, 6.0);
+      gamer->fixed(-fieldTileLenIn);
+      
+      gamer->turnToPosPID(90.0, 6.0);
+      gamer->fixed(-(fieldTileLenIn + (fieldTileLenIn/2.0)));
+      gamer->turnToPosPID(315.0, 6.0);
+      gamer->fixed(-((fieldTileLenIn/2.0) * 1.414)); // root 2
+      
+      gamer->turnToPosPID(270.0, 6.0);
+      gamer->fixed((fieldTileLenIn/2.0));
+      
+      mogoMech.set(true);
+      
+    }
   }
 }
 
