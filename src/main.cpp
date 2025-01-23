@@ -327,9 +327,18 @@ void autonomous(void) {
       gamer->fixed(-((fieldTileLenIn/2.0) * 1.414)); // root 2
       
       gamer->turnToPosPID(270.0, 6.0);
-      gamer->fixed((fieldTileLenIn/2.0));
+      gamer->fixed((fieldTileLenIn/2.0)); //maybe too much?
       
       mogoMech.set(true);
+      intaleMotor.spin(vex::forward, 0.0, vex::pct);
+      gamer->fixed((fieldTileLenIn/2.0));
+
+      // 2nd half
+      gamer->turnToPosPID(180.0, 6.0);
+      gamer->fixed((3.0 * fieldTileLenIn) + (fieldTileLenIn/2.0));
+      mogoMech.set(false);
+
+      gamer->turnToPosPID(270.0, 6.0);
       
     }
   }
