@@ -10,27 +10,27 @@
 
 class Controller {
     private:
-        friend class ControllerCallbackHandler;
-            std::vector<ControllerCallbackHandler> pressedHandlers, releasedHandlers;
+        // friend class ControllerCallbackHandler;
+        //     std::vector<ControllerCallbackHandler> pressedHandlers, releasedHandlers;
 
         vex::controller* internalController;
         
-        std::unordered_map<ControllerButton, bool> buttonMap;
+        // std::unordered_map<ControllerButton, bool> buttonMap;
 
-        template<ControllerButton T> void buttonPressedCallback(Controller* ctrl) {
+        // template<ControllerButton T> void buttonPressedCallback(Controller* ctrl) {
             
-        }
+        // }
 
-        void populateMap() {
-            for(int i = 0; i <= static_cast<int>(BUTTON_R2); i++) {
-                buttonMap[static_cast<ControllerButton>(i)] = false;
-            }
-        }
+        // void populateMap() {
+        //     for(int i = 0; i <= static_cast<int>(BUTTON_R2); i++) {
+        //         buttonMap[static_cast<ControllerButton>(i)] = false;
+        //     }
+        // }
 
     public:
         Controller(vex::controllerType type) {
             this->internalController = new vex::controller(type);
-            populateMap();
+            // populateMap();
         }
 
         /**
@@ -110,28 +110,28 @@ class Controller {
         /***
          * @details returns true one time after the controller has benn pressed
          */
-        bool isPressed(ControllerButton button) {
-            bool val = this->buttonMap[button];
+        // bool isPressed(ControllerButton button) {
+        //     bool val = this->buttonMap[button];
 
-            if (val) {
-                this->buttonMap[button] = false;
-            }
-            return val;
-        }
+        //     if (val) {
+        //         this->buttonMap[button] = false;
+        //     }
+        //     return val;
+        // }
 };
 
-class ControllerCallbackHandler {
-    private:
-        Controller* controller;
-        void(*func)(Controller*);
-    public:
-        ControllerCallbackHandler(Controller* parent, void(*callback)(Controller*)) {
-            this->controller = parent;
-            this->func = callback;
-        }
-        void operator()() const {
-            this->func(this->controller);
-        }
-};
+// class ControllerCallbackHandler {
+//     private:
+//         Controller* controller;
+//         void(*func)(Controller*);
+//     public:
+//         ControllerCallbackHandler(Controller* parent, void(*callback)(Controller*)) {
+//             this->controller = parent;
+//             this->func = callback;
+//         }
+//         void operator()() const {
+//             this->func(this->controller);
+//         }
+// };
 
 #endif

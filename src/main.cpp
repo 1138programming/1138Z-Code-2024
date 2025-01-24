@@ -35,7 +35,7 @@ Movement botMovement(&robotBase, true, true);
 
 Controller mainController(vex::controllerType::primary);
 vex::motor intakeMotor(KIntakeMotorPort, true); // rev so it starts the correct dir
-vex::motor ladyBrownMotor(KWallStakeMotorPort, false);
+vex::motor ladyBrownMotor(KWallStakeMotorPort, true); // rev so it starts the correct dir
 vex::limit limitSwitch(botBrain.ThreeWirePort.B);
 vex::rotation rotationSensor(KRotationSensorPort);
 LadyBrown ladyBrown(&ladyBrownMotor,&mainController, &rotationSensor, &limitSwitch);
@@ -128,7 +128,7 @@ void autonomous(void) {
   // bool redAuton = autonSelector.getAutonRedSide();
 
   //temporary for testing specific auton
-  autonSelector.setAuton(4);
+  autonSelector.setAuton(7);
   autonSelector.setAutonRedSide(true);
 
   // 0 = nothing
@@ -305,28 +305,34 @@ void autonomous(void) {
     }
     // 
     case 7: {
-      gamer->fixed(-(fieldTileLenIn - 6.0 - (botLengthIn/2.0)));
-      gamer->turnToPosPID(-63.435, 6.0);
+      gamer->fixed((fieldTileLenIn - 6.0 - (botLengthIn/2.0)));
+      gamer->turnToPosPID(60.435, 6.0);
       
+      gamer->fixed(-2.0);
       ladyBrownMotor.resetPosition();
       ladyBrownMotor.spinToPosition(340.0, vex::deg, 100.0, vex::velocityUnits::pct, true);
-      ladyBrownMotor.spinToPosition(0.0, vex::deg, 100.0, vex::velocityUnits::pct, true);
+      ladyBrownMotor.setStopping(vex::coast);
 
       mogoMech.set(false);
-      gamer->fixed(40.249);
+      gamer->fixed(-40.249); //maybe less / slower
       mogoMech.set(true);
 
-      gamer->turnToPosPID(180.0, 6.0);
+      gamer->turnToPosPID(-180.0, 6.0);
       intakeMotor.spin(vex::forward, 100.0, vex::pct);
-      gamer->fixed(-fieldTileLenIn);
+      gamer->fixed(fieldTileLenIn);
 
       gamer->turnToPosPID(293.703, 6.0);
-      gamer->fixed(-22.384);
-      gamer->fixed(22.384);
+      gamer->fixed(11.634);
+      gamer->fixed(-11.634);
 
-      gamer->turnToPosPID(23.703, 6.0);
-      gamer->fixed(-22.384);
-      gamer->fixed(22.384);
+      gamer->turnToPosPID(246.297, 6.0);
+      gamer->fixed(11.634);
+      gamer->fixed(-11.634);
+
+      ladyBrownMotor.setStopping(vex::hold);
+      //go to goal
+      gamer->turnToPosPID(0.0, 6.0);
+      gamer->fixedSlow(fieldTileLenIn * 2.5, 50);
       break;
     }
 

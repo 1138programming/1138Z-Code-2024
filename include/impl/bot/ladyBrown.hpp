@@ -68,7 +68,7 @@ class LadyBrown {
             this->rotationSensor = rotationSensor;
             this->limitSwitch = limitSwitch;
 
-            this->vexController->getVexObject()->ButtonA.released();
+            //this->vexController->getVexObject()->ButtonA.released();
         }
         void run() {
             //down (cycle #1)
