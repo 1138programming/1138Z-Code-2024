@@ -305,22 +305,55 @@ void autonomous(void) {
     }
     // 
     case 7: {
-      gamer->fixed(-(fieldTileLenIn - 6.0 - (botLengthIn/2.0)));
-      gamer->turnToPosPID(-63.435, 6.0);
+      gamer->fixed(fieldTileLenIn);
+      gamer->turnToPosPID(294.294, 6.0);
       
-      ladyBrownMotor.resetPosition();
-      ladyBrownMotor.spinToPosition(340.0, vex::deg, 100.0, vex::velocityUnits::pct, true);
-      ladyBrownMotor.spinToPosition(0.0, vex::deg, 100.0, vex::velocityUnits::pct, true);
-
-      mogoMech.set(false);
-      gamer->fixed(40.249);
-      mogoMech.set(true);
-
-      gamer->turnToPosPID(180.0, 6.0);
-      intakeMotor.spin(vex::forward, 100.0, vex::pct);
-      gamer->fixed(-fieldTileLenIn);
+      gamer->fixed(39.498);
 
       break;
+    }
+    case 8: {
+      // setup...
+      intaleMotor.spin(vex::forward, 100.0, vex::pct);
+      gamer->turnToPosPID(270.0, 6.0);
+      gamer->fixed(-fieldTileLenIn);
+      
+      gamer->turnToPosPID(0.0, 6.0);
+      gamer->fixed(-fieldTileLenIn);
+      
+      gamer->turnToPosPID(90.0, 6.0);
+      gamer->fixed(-(fieldTileLenIn + (fieldTileLenIn/2.0)));
+      gamer->turnToPosPID(315.0, 6.0);
+      gamer->fixed(-((fieldTileLenIn/2.0) * 1.414)); // root 2
+      
+      gamer->turnToPosPID(270.0, 6.0);
+      gamer->fixed((fieldTileLenIn/2.0)); //maybe too much?
+      
+      mogoMech.set(true);
+      intaleMotor.spin(vex::forward, 0.0, vex::pct);
+      gamer->fixed((fieldTileLenIn/2.0));
+
+      // 2nd half
+      gamer->turnToPosPID(180.0, 6.0);
+      gamer->fixed((3.0 * fieldTileLenIn) + (fieldTileLenIn/2.0));
+      mogoMech.set(false);
+
+      intaleMotor.spin(vex::forward, 100.0, vex::pct);
+      gamer->turnToPosPID(270.0, 6.0);
+      gamer->fixed(-fieldTileLenIn);
+
+      gamer->turnToPosPID(180.0, 6.0);
+      gamer->fixed(-fieldTileLenIn);
+      gamer->turnToPosPID(90.0, 6.0);
+      gamer->fixed(-(fieldTileLenIn + (fieldTileLenIn/2.0)));
+
+      gamer->turnToPosPID(135.0, 6.0);
+      gamer->fixed(-((fieldTileLenIn/2.0) * 1.414)) // root 2
+      
+      //end
+      gamer->turnToPosPID(270, 6.0);
+      gamer->fixed(-(fieldTileLenIn/2.0));
+      mogoMech.set(true);
     }
   }
 }
