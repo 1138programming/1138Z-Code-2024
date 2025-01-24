@@ -320,6 +320,13 @@ void autonomous(void) {
       intakeMotor.spin(vex::forward, 100.0, vex::pct);
       gamer->fixed(-fieldTileLenIn);
 
+      gamer->turnToPosPID(293.703, 6.0);
+      gamer->fixed(-22.384);
+      gamer->fixed(22.384);
+
+      gamer->turnToPosPID(23.703, 6.0);
+      gamer->fixed(-22.384);
+      gamer->fixed(22.384);
       break;
     }
 
