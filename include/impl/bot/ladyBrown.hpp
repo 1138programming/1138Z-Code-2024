@@ -6,6 +6,8 @@
 #include "../include/vex.h"
 #include "../include/lib/resources/ladybrown_cycle.hpp"
 
+#include <iostream>
+
 class LadyBrown {
     private:
         Controller* vexController;
@@ -28,37 +30,47 @@ class LadyBrown {
             rotationSensor->resetPosition();
         }
         void cycleLadyBrown() {
-            int cycleNum = static_cast<int>(this->cycle);
-            cycleNum++;
-            if (cycleNum >= RESETVAL) {
-                cycleNum = 1;
+            switch (cycle) {
+                case DOWN:
+                    cycle = LOADING;
+                break;
+                case LOADING:
+                    cycle = OUT;
+                break;
+                case OUT:
+                    cycle = DOWN;
+                break;
             }
-            this->cycle = static_cast<LadyBrownCycle>(cycleNum);
         }
         bool checkLastPressed(ControllerButton button) {
+            bool* changeBool = NULL;
+            bool buttonVal = this->vexController->getButton(button);
+            bool retVal = false;
+
             switch(button) {
                 case BUTTON_X:
-                    if(xLastPressed) return false;
-                    xLastPressed = true;
+                    changeBool = &xLastPressed;
+                    retVal = (!xLastPressed && buttonVal);
                 break;
                 case BUTTON_A:
-                    if(aLastPressed) return false;
-                    aLastPressed = true;
+                    changeBool = &aLastPressed;
+                    retVal = (!aLastPressed && buttonVal);
                 break;
                 case DPAD_UP:
-                    if(upLastPressed) return false;
-                    upLastPressed = true;
+                    changeBool = &upLastPressed;
+                    retVal = (!upLastPressed && buttonVal);
                 break;
                 case DPAD_LEFT:
-                    if(leftLastPressed) return false;
-                    leftLastPressed = true;
+                    changeBool = &leftLastPressed;
+                    retVal = (!leftLastPressed && buttonVal);
                 break;
                 case DPAD_DOWN:
-                    if(downLastPressed) return false;
-                    downLastPressed = true;
+                    changeBool = &downLastPressed;
+                    retVal = (!downLastPressed && buttonVal);
                 break;
             }
-            return true;
+            (*changeBool) = buttonVal;
+            return retVal;
         }
     public:
         LadyBrown(vex::motor* armMotor, Controller* vexController, vex::rotation* rotationSensor, vex::limit* limitSwitch) {
@@ -67,44 +79,56 @@ class LadyBrown {
             this->armMotor->setStopping(vex::hold);
             this->rotationSensor = rotationSensor;
             this->limitSwitch = limitSwitch;
-
-            //this->vexController->getVexObject()->ButtonA.released();
+        }
+        void startReset() {
+            this->armMotor->spin(vex::forward, -75.0, vex::pct);
+        }
+        bool checkReset() {
+            bool calibrated = this->limitSwitch->pressing();
+            if (calibrated) {
+                this->armMotor->resetPosition();
+            }
+            return calibrated;
+        }
+        void setResetted(bool reset) {
+            if (reset) {
+                this->cycle = DOWN;
+            }
+            else {
+                this->cycle = START;
+            }
         }
         void run() {
+            bool xPressed = checkLastPressed(ControllerButton::BUTTON_X);
+                if (xPressed) {
+                    std::cout << "X pressed\n" << "\tnum: " << cycle << "\n";
+                }
+            bool upPressed = checkLastPressed(ControllerButton::DPAD_UP);
+            bool aPressed = checkLastPressed(ControllerButton::BUTTON_A);
             //down (cycle #1)
-            if (this->vexController->getVexObject()->ButtonX.PRESSED && cycle == OUT) {
-                if(checkLastPressed(ControllerButton::BUTTON_X)){
+            if (xPressed && cycle == OUT) {
                 this->armMotor->spinToPosition(0, vex::degrees);
                 cycleLadyBrown();
-                }
             }
             //loading (cycle #2)
-            else if (this->vexController->getVexObject()->ButtonX.PRESSED && cycle == DOWN) {
-                if(checkLastPressed(ControllerButton::BUTTON_X)){
-                    this->armMotor->spinToPosition(-60, vex::degrees, false);
-                    cycleLadyBrown();
-                }
+            else if (xPressed && cycle == DOWN) {
+                this->armMotor->spinToPosition(70, vex::degrees, 100.0, vex::velocityUnits::pct, false);
+                cycleLadyBrown();
             }
             //wall stake (cycle #3)
-            else if (this->vexController->getVexObject()->ButtonX.PRESSED && cycle == LOADING) {
-                if(checkLastPressed(ControllerButton::BUTTON_X)){
-                    this->armMotor->spinToPosition(-300, vex::degrees, false);
-                    cycleLadyBrown();
-                }
+            else if (xPressed && cycle == LOADING) {
+                this->armMotor->spinToPosition(300, vex::degrees, 100.0, vex::velocityUnits::pct, false);
+                cycleLadyBrown();
             }
             //alliance stake (separate button)
-            else if (this->vexController->getVexObject()->ButtonUp.PRESSED) {
-                if(checkLastPressed(ControllerButton::DPAD_UP)){
-                    this->armMotor->spinToPosition(-400, vex::degrees, false);
-                    cycle = OUT;
-                }
+            else if (upPressed) {
+                this->armMotor->spinToPosition(400, vex::degrees, 100.0, vex::velocityUnits::pct, false);
+                cycle = OUT;
             }
             //manual loading
-            else if (this->vexController->getVexObject()->ButtonA.PRESSED) {
-                if(checkLastPressed(ControllerButton::BUTTON_A)){
-                    this->armMotor->spinToPosition(-60, vex::degrees, false);
-                    cycle = LOADING;
-                }
+            else if (aPressed) {
+                this->armMotor->spinToPosition(70, vex::degrees, 100.0, vex::velocityUnits::pct, false);
+                cycle = LOADING;
             }
             //manual scoring
             else if (this->vexController->getVexObject()->ButtonA.PRESSED) {

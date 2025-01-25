@@ -4,7 +4,6 @@
 #include "vex.h"
 #include "controller_axis.hpp"
 #include "controller_button.hpp"
-#include "controllerCallbackHandler.hpp"
 
 #include <unordered_map>
 
@@ -120,18 +119,18 @@ class Controller {
         // }
 };
 
-// class ControllerCallbackHandler {
-//     private:
-//         Controller* controller;
-//         void(*func)(Controller*);
-//     public:
-//         ControllerCallbackHandler(Controller* parent, void(*callback)(Controller*)) {
-//             this->controller = parent;
-//             this->func = callback;
-//         }
-//         void operator()() const {
-//             this->func(this->controller);
-//         }
-// };
+class ControllerCallbackHandler {
+    private:
+        Controller* controller;
+        void(*func)(Controller*);
+    public:
+        ControllerCallbackHandler(Controller* parent, void(*callback)(Controller*)) {
+            this->controller = parent;
+            this->func = callback;
+        }
+        void operator()() const {
+            this->func(this->controller);
+        }
+};
 
 #endif

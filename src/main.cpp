@@ -38,7 +38,7 @@ vex::motor intakeMotor(KIntakeMotorPort, true); // rev so it starts the correct 
 vex::motor ladyBrownMotor(KWallStakeMotorPort, true); // rev so it starts the correct dir
 vex::limit limitSwitch(botBrain.ThreeWirePort.B);
 vex::rotation rotationSensor(KRotationSensorPort);
-LadyBrown ladyBrown(&ladyBrownMotor,&mainController, &rotationSensor, &limitSwitch);
+LadyBrown ladyBrown(&ladyBrownMotor, &mainController, &rotationSensor, &limitSwitch);
 Hang botHangPneumatics;
 
 AutonSelector autonSelector(mainController.getVexObject(), &botBrain);
@@ -77,7 +77,7 @@ void pre_auton(void) {
 
   robotBase.resetAllEncoders();
   botGyro->resetGyroWithWait();
-
+  
   autonSelector.add_auton("Do nothing");
   autonSelector.add_auton("Drive Forwards");
   autonSelector.add_auton("2 Stack AWP +0");
@@ -128,7 +128,7 @@ void autonomous(void) {
   // bool redAuton = autonSelector.getAutonRedSide();
 
   //temporary for testing specific auton
-  autonSelector.setAuton(7);
+  autonSelector.setAuton(8);
   autonSelector.setAutonRedSide(true);
 
   // 0 = nothing
@@ -337,7 +337,14 @@ void autonomous(void) {
     }
 
     case 8: {
-      // setup...
+      ladyBrownMotor.resetPosition();
+      ladyBrownMotor.spinToPosition(340.0, vex::deg, 100.0, vex::velocityUnits::pct, true);
+      ladyBrownMotor.setStopping(vex::coast);
+
+      mogoMech.set(false);
+      gamer->fixed(16.0);
+      mogoMech.set(true);
+
       intakeMotor.spin(vex::forward, 100.0, vex::pct);
       gamer->turnToPosPID(270.0, 6.0);
       gamer->fixed(-fieldTileLenIn);
@@ -396,6 +403,8 @@ void usercontrol(void) {
   unsigned long frame = 0;
   mogoMechToggle.setEnabled();
   // User control code here, inside the loop
+  ladyBrown.startReset();
+  bool ladyBrownReset = false;
   while (1) {
       // This is the main execution loop for the user control program.
       // Each time through the loop your program should update motor + servo
@@ -424,8 +433,15 @@ void usercontrol(void) {
       }
 
       mogoMech.set(mogoMechToggle.isEnabled());
-
-      ladyBrown.run();
+      bool lastLadyBrownReset = ladyBrownReset;
+      ladyBrownReset = (ladyBrownReset || ladyBrown.checkReset());
+      if (ladyBrownReset && !lastLadyBrownReset) {
+        ladyBrown.setResetted(true);
+        ladyBrown.run();
+      }
+      else if (ladyBrownReset) {
+        ladyBrown.run();
+      }
 
       intakeEnabled.update(mainController.getButton(BUTTON_R1));
       intakeReversed.update(mainController.getButton(BUTTON_R2));
